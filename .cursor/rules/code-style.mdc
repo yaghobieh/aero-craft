@@ -1,0 +1,27 @@
+---
+description: AeroCraft library code style rules
+globs: src/**/*.ts
+alwaysApply: true
+---
+
+# AeroCraft Code Style
+
+## File Responsibilities
+- `*.types.ts` — all interfaces and type aliases only
+- `*.const.ts` — all constants, numbers, strings
+- `*.ts` — logic only, no inline types or magic numbers
+
+## Naming
+- No magic numbers in logic files. Extract to `numbers.const.ts`
+- No magic strings. Extract to a const file
+- Constant names: UPPER_SNAKE_CASE
+
+## Imports
+- Use `import type` for all type-only imports
+- Path aliases: `@types/*`, `@const/*`, `@core/*`, `@postcss/*`
+
+## Style
+- No `export default` except in `src/index.ts`
+- No `any` — use `unknown` when needed
+- Barrel `index.ts` in every folder
+- One concern per file

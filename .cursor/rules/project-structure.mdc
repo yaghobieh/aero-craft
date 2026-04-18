@@ -1,0 +1,44 @@
+---
+description: AeroCraft project structure
+alwaysApply: true
+---
+
+# AeroCraft Project Structure
+
+## Library (src/)
+```
+src/
+  types/
+    config.types.ts      — AeroCraftConfig, AeroCraftResolvedConfig
+    shortcuts.types.ts   — ShortcutDefinition, ShortcutGroup
+    index.ts
+  constants/
+    numbers.const.ts     — all magic numbers
+    defaults.const.ts    — DEFAULT_PREFIX, DEFAULT_MODE, etc.
+    groups.const.ts      — GROUP_ORDER, GROUP_LABELS
+    shortcuts.const.ts   — ALL_SHORTCUTS, FLEX_SHORTCUTS, etc.
+    index.ts
+  core/
+    parser.ts            — resolveConfig, buildClassName
+    generator.ts         — generateCSS, generateStandaloneCSS
+  postcss/
+    plugin.ts            — aerocraftPlugin (PostCSS plugin)
+    index.ts
+  index.ts               — public API, defineConfig
+```
+
+## Shortcut Definition Pattern
+Every shortcut has:
+- `name` — kebab-case shortcut name (without prefix)
+- `group` — one of GROUP_ORDER values
+- `tailwind` — equivalent Tailwind classes
+- `css` — equivalent standalone CSS properties
+- `description` — one-line plain English description
+
+## Adding a New Group
+1. Add group name to GROUP_ORDER in groups.const.ts
+2. Add GROUP_LABELS entry
+3. Add group toggle to AeroCraftGroupsConfig in config.types.ts
+4. Add DEFAULT_GROUPS entry
+5. Create shortcut definitions in shortcuts.const.ts
+6. Add group to ALL_SHORTCUTS
