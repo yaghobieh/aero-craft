@@ -27,6 +27,8 @@ export {
 } from './constants/shortcuts.const';
 export { GROUP_LABELS, GROUP_ORDER } from './constants/groups.const';
 export { DEFAULT_PREFIX, DEFAULT_SEPARATOR, DEFAULT_MODE, DEFAULT_GROUPS } from './constants/defaults.const';
+export { DEFAULT_THEME_COLORS } from './constants/defaultThemeColors.const';
+export { listResolvedUtilityNames } from './core/listResolvedUtilities';
 
 export type { AeroCraftConfig, AeroCraftMode, AeroCraftSeparator, AeroCraftGroupsConfig, AeroCraftShortcutEntry, AeroCraftResolvedConfig } from './types/config.types';
 export type { ShortcutDefinition, ShortcutGroup, ShortcutsRegistry } from './types/shortcuts.types';

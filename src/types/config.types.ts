@@ -47,6 +47,29 @@ export interface AeroCraftGroupsConfig {
   color?: boolean;
 }
 
+export type AeroCraftColorValue = string | Record<string, string>;
+
+export interface AeroCraftTheme {
+  /**
+   * Named colors. A string defines the DEFAULT shade (`background-<name>`,
+   * `color-<name>`, `border-color-<name>`). Objects emit shaded utilities such as `color-red-500`.
+   * A default palette ships with the library; your entries override those keys.
+   */
+  colors?: Record<string, AeroCraftColorValue>;
+  /** Font families: `{ display: ['Plus Jakarta Sans', 'sans-serif'] }` → `font-display`. */
+  fontFamily?: Record<string, string | string[]>;
+  /** Spacing scale keyed on the token (e.g. `{ '4.5': '1.125rem' }`) → adds `p-<key>`, `m-<key>`, `gap-<key>`. */
+  spacing?: Record<string, string>;
+  /** Border radius tokens → `rounded-<key>`. */
+  borderRadius?: Record<string, string>;
+  /** Box shadow tokens → `shadow-<key>`. */
+  boxShadow?: Record<string, string>;
+  /** Screen/breakpoint overrides (alias of `breakpoints`). */
+  screens?: AeroCraftBreakpoints;
+  /** Extend the defaults instead of replacing them. Same shape as the top-level theme. */
+  extend?: Omit<AeroCraftTheme, 'extend'>;
+}
+
 export interface AeroCraftConfig {
   prefix?: string;
   separator?: AeroCraftSeparator;
@@ -54,6 +77,11 @@ export interface AeroCraftConfig {
   groups?: AeroCraftGroupsConfig | 'all';
   breakpoints?: AeroCraftBreakpoints;
   responsive?: boolean;
+  /** Tailwind-style theme object — colors, fontFamily, spacing, etc. */
+  theme?: AeroCraftTheme;
+  /**
+   * Advanced: fully specified shortcut entries. Prefer `theme` for everyday tokens.
+   */
   customShortcuts?: Record<string, AeroCraftShortcutEntry>;
   /** Glob patterns for source files scanned for prefix-{{value}} arbitrary classes. */
   content?: string[];
@@ -62,7 +90,7 @@ export interface AeroCraftConfig {
 }
 
 export interface AeroCraftShortcutEntry {
-  tailwind: string;
+  tailwind?: string;
   css: Record<string, string>;
   description?: string;
   group?: string;

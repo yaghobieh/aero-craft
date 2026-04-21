@@ -867,9 +867,9 @@ const BASIC_COLORS: Record<string, string> = {
 export const COLOR_SHORTCUTS: Record<string, ShortcutDefinition> = {};
 
 Object.entries(BASIC_COLORS).forEach(([key, val]) => {
-  COLOR_SHORTCUTS[`bg-${key}`] = d(`bg-${key}`, 'color', `bg-${key}`, { 'background-color': val }, `background-color: ${val}`);
-  COLOR_SHORTCUTS[`text-${key}`] = d(`text-${key}`, 'color', `text-${key}`, { color: val }, `color: ${val}`);
-  COLOR_SHORTCUTS[`border-${key}`] = d(`border-${key}`, 'color', `border-${key}`, { 'border-color': val }, `border-color: ${val}`);
+  COLOR_SHORTCUTS[`background-${key}`] = d(`background-${key}`, 'color', `background-${key}`, { 'background-color': val }, `background-color: ${val}`);
+  COLOR_SHORTCUTS[`color-${key}`] = d(`color-${key}`, 'color', `color-${key}`, { color: val }, `color: ${val}`);
+  COLOR_SHORTCUTS[`border-color-${key}`] = d(`border-color-${key}`, 'color', `border-color-${key}`, { 'border-color': val }, `border-color: ${val}`);
 });
 
 const GRAY_SCALE: Record<string, string> = {
@@ -887,9 +887,9 @@ const GRAY_SCALE: Record<string, string> = {
 };
 
 Object.entries(GRAY_SCALE).forEach(([key, val]) => {
-  COLOR_SHORTCUTS[`bg-gray-${key}`] = d(`bg-gray-${key}`, 'color', `bg-slate-${key}`, { 'background-color': val }, `background-color: ${val}`);
-  COLOR_SHORTCUTS[`text-gray-${key}`] = d(`text-gray-${key}`, 'color', `text-slate-${key}`, { color: val }, `color: ${val}`);
-  COLOR_SHORTCUTS[`border-gray-${key}`] = d(`border-gray-${key}`, 'color', `border-slate-${key}`, { 'border-color': val }, `border-color: ${val}`);
+  COLOR_SHORTCUTS[`background-gray-${key}`] = d(`background-gray-${key}`, 'color', `background-gray-${key}`, { 'background-color': val }, `background-color: ${val}`);
+  COLOR_SHORTCUTS[`color-gray-${key}`] = d(`color-gray-${key}`, 'color', `color-gray-${key}`, { color: val }, `color: ${val}`);
+  COLOR_SHORTCUTS[`border-color-gray-${key}`] = d(`border-color-gray-${key}`, 'color', `border-color-gray-${key}`, { 'border-color': val }, `border-color: ${val}`);
 });
 
 Object.assign(SIZE_SHORTCUTS, SIZE_EXTRA_SHORTCUTS);

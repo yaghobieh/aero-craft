@@ -81,7 +81,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yaghobieh/aerocraft"
+    "url": "git+https://github.com/yaghobieh/aero-craft.git"
   },
-  "homepage": "https://forgedevstack.com"
+  "bugs": {
+    "url": "https://github.com/yaghobieh/aero-craft/issues"
+  },
+  "homepage": "https://aerocraftjs.com"
 }

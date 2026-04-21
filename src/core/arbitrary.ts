@@ -94,7 +94,9 @@ function applyPrefix(prefix: string, value: string): Record<string, string> | nu
     basis: () => ({ 'flex-basis': v }),
     rounded: () => ({ 'border-radius': v }),
     text: () => textFromValue(v),
+    color: () => textFromValue(v),
     bg: () => bgFromValue(v),
+    background: () => bgFromValue(v),
     'border-t': () => ({ 'border-top-width': v }),
     'border-r': () => ({ 'border-right-width': v }),
     'border-b': () => ({ 'border-bottom-width': v }),
@@ -175,6 +177,16 @@ function unspaceBracketValue(raw: string): string {
   return out;
 }
 
+function peelImportant(className: string): { body: string; important: boolean } {
+  if (className.startsWith('!')) {
+    return { body: className.slice(1), important: true };
+  }
+  if (className.endsWith('!')) {
+    return { body: className.slice(0, -1), important: true };
+  }
+  return { body: className, important: false };
+}
+
 export function parseArbitraryClass(className: string): ArbitraryParseResult | null {
   const b = className.match(BRACKET_RE);
   if (b) {
@@ -194,24 +206,28 @@ export function parseArbitraryClass(className: string): ArbitraryParseResult | n
 }
 
 export function renderArbitraryStandaloneRule(config: AeroCraftResolvedConfig, className: string): string {
-  const parsed = parseArbitraryClass(className);
+  const { body: peeled, important } = peelImportant(className);
+  const parsed = parseArbitraryClass(peeled);
   if (!parsed) return '';
   const css = applyPrefix(parsed.prefix, parsed.value);
   if (!css) return '';
   const full = buildClassName(config.prefix, config.separator, className);
   const sel = escapeCssClassIdent(full);
-  const body = Object.entries(css)
+  const decl = important
+    ? Object.fromEntries(Object.entries(css).map(([p, val]) => [p, `${val} !important`]))
+    : css;
+  const block = Object.entries(decl)
     .map(([p, val]) => `  ${p}: ${val};`)
     .join('\n');
-  return `.${sel} {\n${body}\n}`;
+  return `.${sel} {\n${block}\n}`;
 }
 
 export function extractArbitraryCandidatesFromSource(source: string): string[] {
   const out: string[] = [];
   const seen = new Set<string>();
-  const reCurly = /[\w.-]+-\{\{[^}]+\}\}/g;
-  const reBracket = /[\w.-]+-\[[^\]]*\]/g;
-  const reParen = /[a-zA-Z][\w-]*-\(--?[\w-]+\)/g;
+  const reCurly = /!?[\w.-]+-\{\{[^}]+\}\}!?/g;
+  const reBracket = /!?[\w.-]+-\[[^\]]*\]!?/g;
+  const reParen = /!?[a-zA-Z][\w-]*-\(--?[\w-]+\)!?/g;
   let m: RegExpExecArray | null;
   while ((m = reCurly.exec(source)) !== null) {
     const name = m[0];

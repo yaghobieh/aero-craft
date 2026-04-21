@@ -1,6 +1,6 @@
 export interface ShortcutDefinition {
   name: string;
-  tailwind: string;
+  tailwind?: string;
   css: Record<string, string>;
   description: string;
   group: string;
