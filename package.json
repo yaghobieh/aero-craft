@@ -1,6 +1,6 @@
 {
   "name": "@forgedevstack/aerocraft",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Composable shortcut utility classes for CSS. PostCSS plugin with configurable prefix and standalone output.",
   "type": "module",
   "main": "./dist/index.cjs",

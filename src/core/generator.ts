@@ -48,7 +48,7 @@ function renderResponsiveVariants(
  * Generates CSS for all enabled shortcut groups and custom shortcuts.
  */
 export function generateCSS(config: AeroCraftResolvedConfig): string {
-  const { prefix, separator, groups, customShortcuts, breakpoints, responsive } = config;
+  const { prefix, separator, groups, customShortcuts, componentRecipes, breakpoints, responsive } = config;
   const lines: string[] = [];
 
   if (groups.motion) {
@@ -78,7 +78,7 @@ export function generateCSS(config: AeroCraftResolvedConfig): string {
     const def: ShortcutDefinition = {
       name,
       group: shortcut.group ?? 'custom',
-      tailwind: shortcut.tailwind,
+      utilityRecipe: shortcut.utilityRecipe,
       css: shortcut.css,
       description: shortcut.description ?? '',
     };
@@ -93,6 +93,21 @@ export function generateCSS(config: AeroCraftResolvedConfig): string {
       lines.push(
         renderResponsiveVariants(buildClassName(prefix, separator, `${name}!`), def, breakpoints, true),
       );
+    }
+  }
+
+  const recipeEntries = Object.entries(componentRecipes);
+  if (recipeEntries.length > 0) {
+    lines.push(`${CSS_COMMENT_GROUP_PREFIX}components${CSS_COMMENT_GROUP_SUFFIX}`);
+    for (const [name, css] of recipeEntries) {
+      const def: ShortcutDefinition = {
+        name,
+        group: 'components',
+        css,
+        description: name,
+      };
+      const className = buildClassName(prefix, separator, name);
+      lines.push(renderClass(className, def, false));
     }
   }
 

@@ -11,5 +11,6 @@ export function listResolvedUtilityNames(config: AeroCraftResolvedConfig): strin
     names.push(...Object.keys(group));
   }
   names.push(...Object.keys(config.customShortcuts));
+  names.push(...Object.keys(config.componentRecipes));
   return [...new Set(names)].sort((a, b) => a.localeCompare(b));
 }

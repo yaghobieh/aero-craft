@@ -8,6 +8,7 @@ import type {
 } from '../types/config.types';
 import { DEFAULT_BREAKPOINTS, DEFAULT_GROUPS, DEFAULT_MODE, DEFAULT_PREFIX, DEFAULT_SEPARATOR } from '../constants/defaults.const';
 import { DEFAULT_THEME_COLORS } from '../constants/defaultThemeColors.const';
+import { DEFAULT_COMPONENT_RECIPES } from '../constants/defaultComponentRecipes.const';
 
 const DEFAULT_KEY = 'DEFAULT';
 
@@ -93,6 +94,36 @@ function simple(css: Record<string, string>, group: string, name: string): AeroC
   return { css, description: name, group };
 }
 
+function normalizeShortcutEntry(entry: AeroCraftShortcutEntry): AeroCraftShortcutEntry {
+  const legacy = entry as AeroCraftShortcutEntry & { tailwind?: string };
+  if (legacy.utilityRecipe === undefined && legacy.tailwind !== undefined) {
+    return {
+      css: entry.css,
+      description: entry.description,
+      group: entry.group,
+      utilityRecipe: legacy.tailwind,
+    };
+  }
+  return entry;
+}
+
+function mergeComponentRecipes(
+  user?: Record<string, Record<string, string>>,
+): Record<string, Record<string, string>> {
+  const out: Record<string, Record<string, string>> = {};
+  for (const [name, css] of Object.entries(DEFAULT_COMPONENT_RECIPES)) {
+    out[name] = { ...css, ...(user?.[name] ?? {}) };
+  }
+  if (user) {
+    for (const [name, css] of Object.entries(user)) {
+      if (!out[name]) {
+        out[name] = { ...css };
+      }
+    }
+  }
+  return out;
+}
+
 function expandTheme(theme: AeroCraftTheme | undefined): {
   shortcuts: Record<string, AeroCraftShortcutEntry>;
   breakpoints: AeroCraftBreakpoints;
@@ -157,6 +188,11 @@ export function resolveConfig(userConfig: AeroCraftConfig = {}): AeroCraftResolv
 
   const { shortcuts: themeShortcuts, breakpoints: themeBreakpoints } = expandTheme(userConfig.theme);
 
+  const mergedCustomRaw = { ...themeShortcuts, ...(userConfig.customShortcuts ?? {}) };
+  const customShortcuts = Object.fromEntries(
+    Object.entries(mergedCustomRaw).map(([k, v]) => [k, normalizeShortcutEntry(v)]),
+  );
+
   return {
     prefix: userConfig.prefix ?? DEFAULT_PREFIX,
     separator: userConfig.separator ?? DEFAULT_SEPARATOR,
@@ -164,7 +200,8 @@ export function resolveConfig(userConfig: AeroCraftConfig = {}): AeroCraftResolv
     groups,
     breakpoints: { ...DEFAULT_BREAKPOINTS, ...themeBreakpoints, ...userConfig.breakpoints },
     responsive: userConfig.responsive ?? false,
-    customShortcuts: { ...themeShortcuts, ...(userConfig.customShortcuts ?? {}) },
+    customShortcuts,
+    componentRecipes: mergeComponentRecipes(userConfig.componentRecipes),
     content: userConfig.content ?? [],
     injectWithoutDirective: userConfig.injectWithoutDirective ?? false,
   };

@@ -77,7 +77,7 @@ export interface AeroCraftConfig {
   groups?: AeroCraftGroupsConfig | 'all';
   breakpoints?: AeroCraftBreakpoints;
   responsive?: boolean;
-  /** Tailwind-style theme object — colors, fontFamily, spacing, etc. */
+  /** Design-token style theme — colors, fontFamily, spacing, etc. */
   theme?: AeroCraftTheme;
   /**
    * Advanced: fully specified shortcut entries. Prefer `theme` for everyday tokens.
@@ -87,9 +87,15 @@ export interface AeroCraftConfig {
   content?: string[];
   /** When true, emits CSS even without the aerocraft at-rule. Default false. */
   injectWithoutDirective?: boolean;
+  /**
+   * Named component presets (plain CSS declarations per class). Defaults include
+   * circle-button and input-rounded; pass the same key to override properties.
+   */
+  componentRecipes?: Record<string, Record<string, string>>;
 }
 
 export interface AeroCraftShortcutEntry {
+  utilityRecipe?: string;
   tailwind?: string;
   css: Record<string, string>;
   description?: string;
@@ -104,6 +110,7 @@ export interface AeroCraftResolvedConfig {
   breakpoints: AeroCraftBreakpoints;
   responsive: boolean;
   customShortcuts: Record<string, AeroCraftShortcutEntry>;
+  componentRecipes: Record<string, Record<string, string>>;
   content: string[];
   injectWithoutDirective: boolean;
 }

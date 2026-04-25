@@ -76,10 +76,10 @@ import {
   SHADOW_LEVELS,
 } from './numbers.const';
 
-const d = (name: string, group: string, tw: string, css: Record<string, string>, desc: string): ShortcutDefinition => ({
+const d = (name: string, group: string, utilityRecipe: string, css: Record<string, string>, desc: string): ShortcutDefinition => ({
   name,
   group,
-  tailwind: tw,
+  utilityRecipe,
   css,
   description: desc,
 });

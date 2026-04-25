@@ -31,7 +31,7 @@ src/
 Every shortcut has:
 - `name` — kebab-case shortcut name (without prefix)
 - `group` — one of GROUP_ORDER values
-- `tailwind` — equivalent Tailwind classes
+- `utilityRecipe` — optional multi-class recipe string for docs and tooling
 - `css` — equivalent standalone CSS properties
 - `description` — one-line plain English description
 

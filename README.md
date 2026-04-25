@@ -1,13 +1,17 @@
 # AeroCraft
 
-Composable shortcut utilities for CSS, built as a PostCSS plugin. Part of [ForgeStack](https://forgedevstack.com).
+Shortcut-first utility classes for CSS, compiled by a PostCSS plugin to plain declarations or `@apply` blocks. Built for [ForgeStack](https://forgedevstack.com) apps that want expressive layout and typography without shipping a runtime.
 
-## What it does
+## Features
 
-- Ships hundreds of **shortcut classes** (flex layouts, grid, spacing, typography, motion, and more).
-- Works in **`standalone`** mode (real CSS declarations) or **`apply`** mode (`@apply` for projects that already use a utility CSS layer).
-- Expands in your stylesheet with **`@aerocraft`** (full bundle) or **`@aerocraft base`**, **`fonts`**, **`layout`**, **`motion`** for smaller chunks.
-- Adds **design tokens** through a familiar `theme` object: colors become `bg-*` / `text-*` / `border-*`, fonts become `font-*`, spacing becomes `p-*` / `m-*` / `gap-*`, and so on.
+- **180+ shortcuts** across layout, flex, grid, spacing, type, motion, filters, and more — each class maps to real CSS the browser understands.
+- **Standalone or apply**: emit full rules, or `@apply` when you already layer utilities in your pipeline.
+- **Chunked bundles** via `@aerocraft`, `@aerocraft base`, `fonts`, `layout`, `motion`, or `all`.
+- **Design tokens** from a single `theme` object: colors → `background-*` / `color-*` / `border-color-*`, spacing → `p-*` / `m-*` / `gap-*`, fonts, radii, shadows, and breakpoints for responsive prefixes.
+- **componentRecipes** (v1.0.1+): named presets such as `circle-button` and `input-rounded`; merge your own or override individual declarations per preset.
+- **customShortcuts** for patterns the generator does not ship, with optional **utilityRecipe** strings for docs and tooling (legacy config key `tailwind` is still read and normalized).
+- **CLI** (`aerocraft build`, `aerocraft init`) and optional **React** helpers from `@forgedevstack/aerocraft/react`.
+- **Pre-built CSS** at `@forgedevstack/aerocraft/styles.css` for quick spikes.
 
 ## Install
 
@@ -15,7 +19,7 @@ Composable shortcut utilities for CSS, built as a PostCSS plugin. Part of [Forge
 npm install @forgedevstack/aerocraft postcss
 ```
 
-Optional: `postcss`, `autoprefixer` as needed by your bundler.
+Add `autoprefixer` if your stack expects it.
 
 ## PostCSS
 
@@ -41,7 +45,7 @@ export default defineConfig({
   groups: 'all',
   theme: {
     colors: {
-      brand: { DEFAULT: '#d70f66', 500: '#f91f7d' },
+      brand: { DEFAULT: '#2563eb', 500: '#3b82f6' },
       ink: '#0f172a',
     },
     fontFamily: {
@@ -56,9 +60,26 @@ export default defineConfig({
 });
 ```
 
-`theme.colors.myred = '#ef4444'` generates `bg-myred`, `text-myred`, and `border-myred`. Nested keys add `bg-myred-500`, etc.
+`theme.colors.accent = '#059669'` yields `background-accent`, `color-accent`, and `border-color-accent`. Nested objects produce stepped utilities such as `background-brand-500`.
 
-Advanced one-offs still use `customShortcuts` (full control over emitted CSS / apply target).
+### Component presets
+
+`componentRecipes` extends built-in defaults. Use the same name to replace only the fields you need:
+
+```ts
+export default defineConfig({
+  componentRecipes: {
+    'circle-button': { width: '3rem', height: '3rem' },
+    'input-rounded': { borderRadius: '999px' },
+  },
+});
+```
+
+See the portal doc **Core concepts → Component presets** for HTML examples and TypeScript usage.
+
+### Dark mode
+
+AeroCraft does not emit a `dark:` variant. Prefer semantic tokens in `theme.colors`, a class on `html`/`body`, or your own `@media (prefers-color-scheme: dark)` rules. Responsive prefixes such as `md:` come from `responsive: true` and your breakpoints map.
 
 ## CSS entry
 
@@ -74,15 +95,15 @@ Advanced one-offs still use `customShortcuts` (full control over emitted CSS / a
 }
 ```
 
-Layered output keeps component CSS predictable. AeroCraft is **not** a browser reset—add your own minimal base rules or a normalize package if you need one.
+AeroCraft is not a CSS reset — add normalize or your UI kit’s base layer if you need one.
 
-## Pre-built CSS
+## Pre-built stylesheet
 
 ```ts
 import '@forgedevstack/aerocraft/styles.css';
 ```
 
-Useful for quick prototypes; the PostCSS pipeline is recommended for production so `theme` and `customShortcuts` apply.
+Best for demos; production should use PostCSS so `theme` and `customShortcuts` apply.
 
 ## CLI
 
@@ -91,15 +112,21 @@ npx aerocraft build ./dist/aerocraft.css
 npx aerocraft init
 ```
 
-## Editor support
+## Editor tooling
 
-See the `aero-craft-plugin` workspace for a VS Code / Cursor extension (completions, Bear snippets, optional utility-alias mode).
+The **aero-craft-plugin** repo ships a VS Code / Cursor extension (completions, snippets, optional alias mode).
 
-## Links
+## Documentation
 
-- [Portal](https://aerocraftjs.com)
+- **Site**: [aerocraftjs.com](https://aerocraftjs.com) — guides, property reference, recipes, **Studio** (live config), and **Playground**.
+- **ForgeStack hub**: [forgedevstack.com/aerocraft](https://forgedevstack.com/aerocraft) — ecosystem context and install overview.
+- **Changelog**: see `CHANGELOG.md` in this repo.
+
+## Package links
+
 - [npm](https://www.npmjs.com/package/@forgedevstack/aerocraft)
-- [GitHub](https://github.com/yaghobieh/aerocraft)
+- [Repository](https://github.com/yaghobieh/aero-craft)
+- [Issues](https://github.com/yaghobieh/aero-craft/issues)
 
 ## License
 
