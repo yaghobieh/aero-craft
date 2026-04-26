@@ -2,6 +2,9 @@ export { resolveConfig, buildClassName } from './core/parser';
 export { generateCSS, generateCSSForGroups, generateStandaloneCSS } from './core/generator';
 export { escapeCssClassIdent } from './core/cssEscape';
 export { parseArbitraryClass, renderArbitraryStandaloneRule, extractArbitraryCandidatesFromSource } from './core/arbitrary';
+export { generateVariantCSS } from './core/variantGenerator';
+export { model, getModels, getComponents, registerModels, resetModels } from './core/models';
+export type { ModelEntry, ModelRegistry } from './core/models';
 export {
   ALL_SHORTCUTS,
   FLEX_SHORTCUTS,

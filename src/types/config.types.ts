@@ -92,6 +92,11 @@ export interface AeroCraftConfig {
    * circle-button and input-rounded; pass the same key to override properties.
    */
   componentRecipes?: Record<string, Record<string, string>>;
+  /**
+   * CSS selector for dark mode. Default: `.dark`.
+   * The dark variant (`dark:bear-bg-*`) wraps rules in this selector scope.
+   */
+  darkSelector?: string;
 }
 
 export interface AeroCraftShortcutEntry {

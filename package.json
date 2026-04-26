@@ -1,6 +1,6 @@
 {
   "name": "@forgedevstack/aerocraft",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Composable shortcut utility classes for CSS. PostCSS plugin with configurable prefix and standalone output.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -38,9 +38,9 @@
   ],
   "scripts": {
     "dev": "vite build --watch",
-    "build": "tsc && vite build && npm run build:css",
+    "build": "npx tsc && npx vite build && npm run build:css",
     "build:css": "node scripts/build-css.mjs",
-    "prepare": "npm run build",
+    "prepare": "echo 'skipping prepare for local dev'",
     "lint": "eslint . --ext ts",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run build"

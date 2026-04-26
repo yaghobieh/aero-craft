@@ -1,16 +1,8 @@
 import type { AeroCraftResolvedConfig } from '../types/config.types';
 import { buildClassName } from './parser';
 import { escapeCssClassIdent } from './cssEscape';
-
-const CURLY_RE = /^(.+)-\{\{([^}]+)\}\}$/;
-const BRACKET_RE = /^(.+)-\[([^\]]*)\]$/;
-const PAREN_RE = /^(.+)-\(([^)]+)\)$/;
-
-export type ArbitraryParseResult = {
-  prefix: string;
-  value: string;
-  syntax: 'bracket' | 'curly' | 'paren';
-};
+import { ARBITRARY_BRACKET_RE, ARBITRARY_CURLY_RE, ARBITRARY_PAREN_RE } from './arbitrary.const';
+import type { ArbitraryParseResult } from './arbitrary.types';
 
 function textFromValue(v: string): Record<string, string> {
   const t = v.trim();
@@ -188,15 +180,15 @@ function peelImportant(className: string): { body: string; important: boolean } 
 }
 
 export function parseArbitraryClass(className: string): ArbitraryParseResult | null {
-  const b = className.match(BRACKET_RE);
+  const b = className.match(ARBITRARY_BRACKET_RE);
   if (b) {
     return { prefix: b[1], value: unspaceBracketValue(b[2]), syntax: 'bracket' };
   }
-  const c = className.match(CURLY_RE);
+  const c = className.match(ARBITRARY_CURLY_RE);
   if (c) {
     return { prefix: c[1], value: c[2].trim(), syntax: 'curly' };
   }
-  const p = className.match(PAREN_RE);
+  const p = className.match(ARBITRARY_PAREN_RE);
   if (p) {
     const varName = p[2].trim();
     const wrapped = varName.startsWith('--') ? `var(${varName})` : `var(--${varName})`;

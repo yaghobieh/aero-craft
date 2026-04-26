@@ -1,11 +1,35 @@
 import type { PluginCreator } from 'postcss';
-import type { AeroCraftConfig } from '../types/config.types';
 import { resolveConfig } from '../core/parser';
 import { generateCSS, generateCSSForGroups } from '../core/generator';
 import { generateCssFromContentScan } from '../core/scanContent';
+import { generateVariantCSS } from '../core/variantGenerator';
+import type { AeroCraftPluginOptions } from './plugin.types';
+import {
+  AEROCRAFT_AT_RULE,
+  AEROCRAFT_BASE_GROUPS,
+  AEROCRAFT_FONT_GROUPS,
+  AEROCRAFT_LAYER_ALL,
+  AEROCRAFT_LAYER_BASE,
+  AEROCRAFT_LAYER_FONTS,
+  AEROCRAFT_LAYER_INTERACTIVE,
+  AEROCRAFT_LAYER_LAYOUT,
+  AEROCRAFT_LAYER_MOTION,
+  AEROCRAFT_LAYER_TYPOGRAPHY,
+  AEROCRAFT_LAYOUT_GROUPS,
+  AEROCRAFT_MOTION_GROUPS,
+  DEFAULT_DARK_SELECTOR,
+  ROOT_SELECTOR_PREFIX,
+  SELECTOR_DESCENDANT_SEPARATOR,
+  SELECTOR_PSEUDO_SEPARATOR,
+} from './plugin.const';
 
-const aerocraftPlugin: PluginCreator<AeroCraftConfig> = (opts = {}) => {
-  const config = resolveConfig(opts);
+/**
+ * PostCSS plugin that expands `@aerocraft` directives into generated utility CSS.
+ * Supports layer subsets (`base`, `fonts`, `layout`, `motion`) and optional variant generation.
+ */
+const aerocraftPlugin: PluginCreator<AeroCraftPluginOptions> = (opts?: AeroCraftPluginOptions) => {
+  const { darkSelector, ...configOpts } = opts || {};
+  const config = resolveConfig(configOpts);
 
   return {
     postcssPlugin: 'aerocraft',
@@ -19,31 +43,25 @@ const aerocraftPlugin: PluginCreator<AeroCraftConfig> = (opts = {}) => {
 
       const emit = (param: string) => {
         const p = param.trim();
-        if (!p || p === 'all') {
+        if (!p || p === AEROCRAFT_LAYER_ALL) {
           return merge(generateCSS(config));
         }
-        if (p === 'base') {
-          return merge(
-            generateCSSForGroups(config, ['display', 'flex', 'spacing', 'gap', 'size']),
-          );
+        if (p === AEROCRAFT_LAYER_BASE) {
+          return merge(generateCSSForGroups(config, [...AEROCRAFT_BASE_GROUPS]));
         }
-        if (p === 'fonts' || p === 'typography') {
-          return merge(generateCSSForGroups(config, ['text']));
+        if (p === AEROCRAFT_LAYER_FONTS || p === AEROCRAFT_LAYER_TYPOGRAPHY) {
+          return merge(generateCSSForGroups(config, [...AEROCRAFT_FONT_GROUPS]));
         }
-        if (p === 'layout') {
-          return merge(
-            generateCSSForGroups(config, ['flex', 'grid', 'position', 'display', 'gap']),
-          );
+        if (p === AEROCRAFT_LAYER_LAYOUT) {
+          return merge(generateCSSForGroups(config, [...AEROCRAFT_LAYOUT_GROUPS]));
         }
-        if (p === 'motion' || p === 'interactive') {
-          return merge(
-            generateCSSForGroups(config, ['transition', 'cursor', 'interactive']),
-          );
+        if (p === AEROCRAFT_LAYER_MOTION || p === AEROCRAFT_LAYER_INTERACTIVE) {
+          return merge(generateCSSForGroups(config, [...AEROCRAFT_MOTION_GROUPS]));
         }
         return merge(generateCSS(config));
       };
 
-      root.walkAtRules('aerocraft', (rule) => {
+      root.walkAtRules(AEROCRAFT_AT_RULE, (rule) => {
         const param = rule.params ?? '';
         rule.replaceWith(parse(emit(param), { from }));
         injected = true;
@@ -51,6 +69,34 @@ const aerocraftPlugin: PluginCreator<AeroCraftConfig> = (opts = {}) => {
 
       if (!injected && config.injectWithoutDirective) {
         root.prepend(parse(emit('all'), { from }));
+      }
+
+      // Variant generation: scan source files and generate dark:, hover:, focus:, etc.
+      if (config.content.length > 0) {
+        const baseRuleMap = new Map<string, Array<[string, string]>>();
+        root.walkRules((rule) => {
+          const sel = rule.selector;
+          if (
+            sel
+            && sel.startsWith(ROOT_SELECTOR_PREFIX)
+            && !sel.includes(SELECTOR_DESCENDANT_SEPARATOR)
+            && !sel.includes(SELECTOR_PSEUDO_SEPARATOR)
+          ) {
+            const name = sel.slice(1);
+            if (!baseRuleMap.has(name)) {
+              const decls: Array<[string, string]> = [];
+              rule.walkDecls((decl) => { decls.push([decl.prop, decl.value]); });
+              baseRuleMap.set(name, decls);
+            }
+          }
+        });
+
+        const variantCSS = generateVariantCSS(config, baseRuleMap, {
+          darkSelector: darkSelector || DEFAULT_DARK_SELECTOR,
+        });
+        if (variantCSS) {
+          root.append(parse(variantCSS, { from }));
+        }
       }
     },
   };
