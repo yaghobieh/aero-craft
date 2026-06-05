@@ -897,6 +897,85 @@ Object.assign(TEXT_SHORTCUTS, TEXT_EXTRA_SHORTCUTS);
 Object.assign(FONT_SHORTCUTS, FONT_EXTRA_SHORTCUTS);
 Object.assign(INTERACTIVE_SHORTCUTS, INTERACTIVE_EXTRA_SHORTCUTS);
 
+/* ============================== Ring Utilities (first-class) ============================== */
+
+export const RING_SHORTCUTS: Record<string, ShortcutDefinition> = {
+  'ring-0': d('ring-0', 'ring', 'ring-0', { 'box-shadow': '0 0 0 0px var(--ac-ring-color, rgb(59 130 246 / 0.5))' }, 'Remove ring'),
+  'ring-1': d('ring-1', 'ring', 'ring-1', { 'box-shadow': '0 0 0 1px var(--ac-ring-color, rgb(59 130 246 / 0.5))' }, '1px ring'),
+  'ring-2': d('ring-2', 'ring', 'ring-2', { 'box-shadow': '0 0 0 2px var(--ac-ring-color, rgb(59 130 246 / 0.5))' }, '2px ring'),
+  ring:     d('ring', 'ring', 'ring',     { 'box-shadow': '0 0 0 3px var(--ac-ring-color, rgb(59 130 246 / 0.5))' }, '3px ring (default)'),
+  'ring-4': d('ring-4', 'ring', 'ring-4', { 'box-shadow': '0 0 0 4px var(--ac-ring-color, rgb(59 130 246 / 0.5))' }, '4px ring'),
+  'ring-8': d('ring-8', 'ring', 'ring-8', { 'box-shadow': '0 0 0 8px var(--ac-ring-color, rgb(59 130 246 / 0.5))' }, '8px ring'),
+  'ring-inset': d('ring-inset', 'ring', 'ring-inset', { 'box-shadow': 'inset 0 0 0 3px var(--ac-ring-color, rgb(59 130 246 / 0.5))' }, 'Inset ring'),
+  'ring-offset-0': d('ring-offset-0', 'ring', 'ring-offset-0', { 'outline': '0px solid var(--ac-ring-offset-color, #fff)', 'outline-offset': '0px' }, 'Ring offset 0'),
+  'ring-offset-1': d('ring-offset-1', 'ring', 'ring-offset-1', { 'outline': '1px solid var(--ac-ring-offset-color, #fff)', 'outline-offset': '-1px' }, 'Ring offset 1px'),
+  'ring-offset-2': d('ring-offset-2', 'ring', 'ring-offset-2', { 'outline': '2px solid var(--ac-ring-offset-color, #fff)', 'outline-offset': '-2px' }, 'Ring offset 2px'),
+  'ring-offset-4': d('ring-offset-4', 'ring', 'ring-offset-4', { 'outline': '4px solid var(--ac-ring-offset-color, #fff)', 'outline-offset': '-4px' }, 'Ring offset 4px'),
+  'ring-offset-8': d('ring-offset-8', 'ring', 'ring-offset-8', { 'outline': '8px solid var(--ac-ring-offset-color, #fff)', 'outline-offset': '-8px' }, 'Ring offset 8px'),
+};
+
+Object.entries(BASIC_COLORS).forEach(([key, val]) => {
+  RING_SHORTCUTS[`ring-${key}`] = d(`ring-${key}`, 'ring', `ring-${key}`, { '--ac-ring-color': val }, `Ring color: ${val}`);
+  RING_SHORTCUTS[`ring-offset-${key}`] = d(`ring-offset-${key}`, 'ring', `ring-offset-${key}`, { '--ac-ring-offset-color': val }, `Ring offset color: ${val}`);
+});
+
+Object.entries(GRAY_SCALE).forEach(([key, val]) => {
+  RING_SHORTCUTS[`ring-gray-${key}`] = d(`ring-gray-${key}`, 'ring', `ring-gray-${key}`, { '--ac-ring-color': val }, `Ring color: gray-${key}`);
+});
+
+/* ============================== Divide Utilities ============================== */
+
+export const DIVIDE_SHORTCUTS: Record<string, ShortcutDefinition> = {
+  'divide-x-0': d('divide-x-0', 'divide', 'divide-x-0', { 'border-left-width': '0px' }, 'Horizontal divider: 0',),
+  'divide-x':   d('divide-x', 'divide', 'divide-x',     { 'border-left-width': '1px' }, 'Horizontal divider: 1px'),
+  'divide-x-2': d('divide-x-2', 'divide', 'divide-x-2', { 'border-left-width': '2px' }, 'Horizontal divider: 2px'),
+  'divide-x-4': d('divide-x-4', 'divide', 'divide-x-4', { 'border-left-width': '4px' }, 'Horizontal divider: 4px'),
+  'divide-x-8': d('divide-x-8', 'divide', 'divide-x-8', { 'border-left-width': '8px' }, 'Horizontal divider: 8px'),
+  'divide-y-0': d('divide-y-0', 'divide', 'divide-y-0', { 'border-top-width': '0px' }, 'Vertical divider: 0'),
+  'divide-y':   d('divide-y', 'divide', 'divide-y',     { 'border-top-width': '1px' }, 'Vertical divider: 1px'),
+  'divide-y-2': d('divide-y-2', 'divide', 'divide-y-2', { 'border-top-width': '2px' }, 'Vertical divider: 2px'),
+  'divide-y-4': d('divide-y-4', 'divide', 'divide-y-4', { 'border-top-width': '4px' }, 'Vertical divider: 4px'),
+  'divide-y-8': d('divide-y-8', 'divide', 'divide-y-8', { 'border-top-width': '8px' }, 'Vertical divider: 8px'),
+  'divide-solid': d('divide-solid', 'divide', 'divide-solid', { 'border-style': 'solid' }, 'Divider style: solid'),
+  'divide-dashed': d('divide-dashed', 'divide', 'divide-dashed', { 'border-style': 'dashed' }, 'Divider style: dashed'),
+  'divide-dotted': d('divide-dotted', 'divide', 'divide-dotted', { 'border-style': 'dotted' }, 'Divider style: dotted'),
+  'divide-double': d('divide-double', 'divide', 'divide-double', { 'border-style': 'double' }, 'Divider style: double'),
+  'divide-none': d('divide-none', 'divide', 'divide-none', { 'border-style': 'none' }, 'Divider style: none'),
+};
+
+for (const shortcut of Object.values(DIVIDE_SHORTCUTS)) {
+  if (shortcut.name.startsWith('divide-x') && !shortcut.name.includes('solid') && !shortcut.name.includes('dashed') && !shortcut.name.includes('dotted') && !shortcut.name.includes('double') && !shortcut.name.includes('none')) {
+    shortcut.nestedSelector = ' > * + *';
+    shortcut.nestedCss = { ...shortcut.css };
+    shortcut.css = {};
+  } else if (shortcut.name.startsWith('divide-y') && !shortcut.name.includes('solid') && !shortcut.name.includes('dashed') && !shortcut.name.includes('dotted') && !shortcut.name.includes('double') && !shortcut.name.includes('none')) {
+    shortcut.nestedSelector = ' > * + *';
+    shortcut.nestedCss = { ...shortcut.css };
+    shortcut.css = {};
+  }
+}
+
+Object.entries(BASIC_COLORS).forEach(([key, val]) => {
+  const s = d(`divide-${key}`, 'divide', `divide-${key}`, {}, `Divide color: ${val}`);
+  s.nestedSelector = ' > * + *';
+  s.nestedCss = { 'border-color': val };
+  DIVIDE_SHORTCUTS[`divide-${key}`] = s;
+});
+
+Object.entries(GRAY_SCALE).forEach(([key, val]) => {
+  const s = d(`divide-gray-${key}`, 'divide', `divide-gray-${key}`, {}, `Divide color: gray-${key}`);
+  s.nestedSelector = ' > * + *';
+  s.nestedCss = { 'border-color': val };
+  DIVIDE_SHORTCUTS[`divide-gray-${key}`] = s;
+});
+
+/* ============================== Content Utilities ============================== */
+
+export const CONTENT_SHORTCUTS: Record<string, ShortcutDefinition> = {
+  'content-none':  d('content-none', 'content', 'content-none', { content: 'none' }, 'content: none'),
+  'content-empty': d('content-empty', 'content', 'content-empty', { content: '""' }, 'content: ""'),
+};
+
 export const ALL_SHORTCUTS: Record<string, Record<string, ShortcutDefinition>> = {
   layout: LAYOUT_SHORTCUTS,
   flex: FLEX_SHORTCUTS,
@@ -931,4 +1010,7 @@ export const ALL_SHORTCUTS: Record<string, Record<string, ShortcutDefinition>> =
   opacity: OPACITY_SHORTCUTS,
   shadow: SHADOW_SHORTCUTS,
   color: COLOR_SHORTCUTS,
+  ring: RING_SHORTCUTS,
+  divide: DIVIDE_SHORTCUTS,
+  content: CONTENT_SHORTCUTS,
 };

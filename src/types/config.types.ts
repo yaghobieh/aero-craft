@@ -45,6 +45,9 @@ export interface AeroCraftGroupsConfig {
   opacity?: boolean;
   shadow?: boolean;
   color?: boolean;
+  ring?: boolean;
+  divide?: boolean;
+  content?: boolean;
 }
 
 export type AeroCraftColorValue = string | Record<string, string>;
@@ -69,6 +72,15 @@ export interface AeroCraftTheme {
   /** Extend the defaults instead of replacing them. Same shape as the top-level theme. */
   extend?: Omit<AeroCraftTheme, 'extend'>;
 }
+
+export interface AeroCraftPluginApi {
+  addUtilities: (utilities: Record<string, Record<string, string>>, options?: { respectPrefix?: boolean }) => void;
+  addComponents: (components: Record<string, Record<string, string>>, options?: { respectPrefix?: boolean }) => void;
+  theme: (path: string) => unknown;
+  config: (path: string) => unknown;
+}
+
+export type AeroCraftPlugin = (api: AeroCraftPluginApi) => void;
 
 export interface AeroCraftConfig {
   prefix?: string;
@@ -97,6 +109,8 @@ export interface AeroCraftConfig {
    * The dark variant (`dark:bear-bg-*`) wraps rules in this selector scope.
    */
   darkSelector?: string;
+  /** Plugins that extend AeroCraft with custom utilities and components. */
+  plugins?: AeroCraftPlugin[];
 }
 
 export interface AeroCraftShortcutEntry {
@@ -118,4 +132,6 @@ export interface AeroCraftResolvedConfig {
   componentRecipes: Record<string, Record<string, string>>;
   content: string[];
   injectWithoutDirective: boolean;
+  pluginUtilities: Record<string, Record<string, string>>;
+  pluginComponents: Record<string, Record<string, string>>;
 }

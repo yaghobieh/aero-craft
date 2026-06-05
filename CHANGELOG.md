@@ -1,5 +1,37 @@
 # Changelog
 
+## [1.0.5] - 2026-05-14
+
+### Added
+- **Container query variant** (`@container:`) — wrap utilities in `@container { … }`. Supports named containers via `@container/sidebar:`. Example: `@container:bear-flex-col`.
+- **Plugin system** (`addUtilities`, `addComponents`) — third-party plugins can now register custom utilities and components via the new `plugins` config array. Plugins receive a `{ addUtilities, addComponents, theme, config }` API, similar to Tailwind's plugin architecture.
+- **`print:` variant** — media query variant for print styling. Example: `print:bear-hidden`.
+- **`aria-*` / `data-*` variants** — dynamic attribute-based variants. `aria-selected:bear-bg-blue-500` generates `[aria-selected="true"]`; `data-active:bear-text-white` generates `[data-active]`.
+- **Full `peer:` / `group:` variant set** — `group-focus`, `group-active`, `group-focus-within`, `group-focus-visible`, `group-disabled`, `group-checked`, `group-invalid`, `peer-hover`, `peer-focus`, `peer-focus-visible`, `peer-active`, `peer-checked`, `peer-disabled`, `peer-invalid`, `peer-required`, `peer-placeholder-shown`.
+- **Ring utilities (first-class)** — `ring-0` through `ring-8`, `ring-inset`, `ring-offset-*`, and ring color utilities (`ring-blue-500`, `ring-gray-*`, etc.) using `--ac-ring-color` CSS custom property.
+- **Divide utilities** — `divide-x`, `divide-y` with width scale (0–8), `divide-solid/dashed/dotted/double/none`, and divide color utilities via `> * + *` nested selector.
+- **Content utility** — `content-none` and `content-empty` as static shortcuts. Arbitrary `content-['…']` now supported via the bracket notation.
+- **`env()` support** — arbitrary paren syntax `p-(env-safe-area-inset-top)` resolves to `env(safe-area-inset-top)`. Also recognized in `text-[env(…)]` and `bg-[env(…)]` bracket notation.
+- **`prefers-reduced-motion` variants** — `motion-reduce:` and `motion-safe:` wrap rules in the appropriate media query.
+- **`supports-*` variants** — feature detection variants like `supports-grid:bear-grid` → `@supports (display: grid)`. Bracket form `supports-[display:grid]:` also supported.
+- **Additional pseudo-class/element variants** — `visited`, `checked`, `required`, `invalid`, `valid`, `empty`, `enabled`, `indeterminate`, `read-only`, `read-write`, `only-child`, `first-of-type`, `last-of-type`, `only-of-type`, `before`, `after`, `selection`, `marker`, `first-line`, `first-letter`.
+- **Media orientation variants** — `portrait:` and `landscape:`.
+- **Contrast preference variants** — `contrast-more:` and `contrast-less:`.
+- **Nested selector support** in `ShortcutDefinition` (`nestedSelector` + `nestedCss`) for utilities that target child elements (e.g. divide utilities).
+
+### Changed
+- `AeroCraftGroupsConfig` now includes `ring`, `divide`, and `content` groups (all enabled by default).
+- `AeroCraftResolvedConfig` includes `pluginUtilities` and `pluginComponents` from the plugin system.
+- `VARIANT_SELECTOR_MAP` expanded from 13 to 50+ entries covering the full pseudo-class, pseudo-element, group, and peer variant set.
+- Variant token regex updated to detect dynamic patterns (`aria-*`, `data-*`, `supports-*`, `@container`).
+- Ring color utilities now use `--ac-ring-color` CSS variable (previously `--tw-ring-color` / `--bear-ring-color`).
+
+## [1.0.4] - 2026-05-01
+
+### Added
+- VS Code extension IntelliSense scaffolding.
+- Portal documentation overhaul.
+
 ## [1.0.3] - 2026-04-13
 
 ### Added

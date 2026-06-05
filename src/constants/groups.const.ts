@@ -32,6 +32,9 @@ export const GROUP_LABELS: Record<string, string> = {
   opacity: 'Opacity',
   shadow: 'Shadow',
   color: 'Color',
+  ring: 'Ring',
+  divide: 'Divide',
+  content: 'Content',
 };
 
 export const GROUP_ORDER = [
@@ -66,6 +69,9 @@ export const GROUP_ORDER = [
   'scroll',
   'interactive',
   'cursor',
+  'ring',
+  'divide',
+  'content',
   'svg',
   'a11y',
 ] as const;
@@ -83,10 +89,11 @@ export const PORTAL_CATEGORIES: Array<{
   { id: 'box-model', label: 'Box model', groups: ['spacing', 'gap'] },
   { id: 'sizing', label: 'Sizing', groups: ['size'] },
   { id: 'type', label: 'Type', groups: ['font', 'text', 'list', 'color'] },
-  { id: 'surface', label: 'Surface', groups: ['background', 'border', 'radius', 'outline', 'shadow', 'opacity', 'effect'] },
+  { id: 'surface', label: 'Surface', groups: ['background', 'border', 'radius', 'outline', 'shadow', 'opacity', 'effect', 'ring', 'divide'] },
   { id: 'motion', label: 'Motion', groups: ['transition', 'motion', 'transform'] },
   { id: 'fx', label: 'FX', groups: ['filter', 'backdrop'] },
   { id: 'tables', label: 'Tables', groups: ['table'] },
+  { id: 'content', label: 'Content', groups: ['content'] },
   { id: 'interact', label: 'Interact', groups: ['interactive', 'cursor', 'scroll'] },
   { id: 'svg', label: 'SVG', groups: ['svg'] },
   { id: 'a11y', label: 'Accessibility', groups: ['a11y'] },

@@ -1,5 +1,5 @@
 export const DEFAULT_COMPONENT_RECIPES: Record<string, Record<string, string>> = {
-  // ── Buttons ──────────────────────────────────────────────────────
+  // ---- Buttons -----------------------------------------------------------
   'btn': {
     display: 'inline-flex',
     'align-items': 'center',
@@ -106,7 +106,7 @@ export const DEFAULT_COMPONENT_RECIPES: Record<string, Record<string, string>> =
     'box-sizing': 'border-box',
   },
 
-  // ── Inputs ───────────────────────────────────────────────────────
+  // ---- Inputs -----------------------------------------------------------
   'input': {
     display: 'block',
     width: '100%',
@@ -195,7 +195,7 @@ export const DEFAULT_COMPONENT_RECIPES: Record<string, Record<string, string>> =
     cursor: 'pointer',
   },
 
-  // ── Cards ────────────────────────────────────────────────────────
+  // ---- Cards -----------------------------------------------------------
   'card': {
     'border-radius': '0.75rem',
     border: '1px solid #e2e8f0',
@@ -221,7 +221,7 @@ export const DEFAULT_COMPONENT_RECIPES: Record<string, Record<string, string>> =
     'box-sizing': 'border-box',
   },
 
-  // ── Badges ───────────────────────────────────────────────────────
+  // ---- Badges -----------------------------------------------------------
   'badge': {
     display: 'inline-flex',
     'align-items': 'center',
@@ -233,7 +233,7 @@ export const DEFAULT_COMPONENT_RECIPES: Record<string, Record<string, string>> =
     'white-space': 'nowrap',
   },
 
-  // ── Avatar ───────────────────────────────────────────────────────
+  // ---- Avatar -----------------------------------------------------------
   'avatar': {
     display: 'inline-flex',
     'align-items': 'center',
@@ -258,7 +258,7 @@ export const DEFAULT_COMPONENT_RECIPES: Record<string, Record<string, string>> =
     'font-size': '1rem',
   },
 
-  // ── Divider ──────────────────────────────────────────────────────
+  // ---- Divider -----------------------------------------------------------
   'divider': {
     width: '100%',
     height: '1px',
@@ -267,7 +267,7 @@ export const DEFAULT_COMPONENT_RECIPES: Record<string, Record<string, string>> =
     margin: '1rem 0',
   },
 
-  // ── Container ────────────────────────────────────────────────────
+  // ---- Container -----------------------------------------------------------
   'container': {
     width: '100%',
     'max-width': '1280px',
@@ -278,21 +278,21 @@ export const DEFAULT_COMPONENT_RECIPES: Record<string, Record<string, string>> =
     'box-sizing': 'border-box',
   },
 
-  // ── Skeleton ─────────────────────────────────────────────────────
+  // ---- Skeleton -----------------------------------------------------------
   'skeleton': {
     'border-radius': '0.375rem',
     'background-color': '#e2e8f0',
     animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
   },
 
-  // ── Prose (text content) ─────────────────────────────────────────
+  // ---- Prose (text content) -----------------------------------------------
   'prose': {
     'max-width': '65ch',
     'line-height': '1.75',
     'font-size': '1rem',
   },
 
-  // ── Overlay / Backdrop ───────────────────────────────────────────
+  // ---- Overlay / Backdrop -------------------------------------------------
   'overlay': {
     position: 'fixed',
     inset: '0',
@@ -300,13 +300,13 @@ export const DEFAULT_COMPONENT_RECIPES: Record<string, Record<string, string>> =
     'z-index': '40',
   },
 
-  // ── Focus ring ───────────────────────────────────────────────────
+  // ---- Focus ring --------------------------------------------------------
   'focus-ring': {
     outline: '2px solid var(--bear-primary-500, #3b82f6)',
     'outline-offset': '2px',
   },
 
-  // ── Transition presets ───────────────────────────────────────────
+  // ---- Transition presets -------------------------------------------------
   'transition': {
     'transition-property': 'all',
     'transition-duration': '200ms',

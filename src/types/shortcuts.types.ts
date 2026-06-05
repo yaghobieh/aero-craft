@@ -4,6 +4,8 @@ export interface ShortcutDefinition {
   css: Record<string, string>;
   description: string;
   group: string;
+  nestedSelector?: string;
+  nestedCss?: Record<string, string>;
 }
 
 export type ShortcutGroup = Record<string, ShortcutDefinition>;

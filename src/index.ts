@@ -2,7 +2,7 @@ export { resolveConfig, buildClassName } from './core/parser';
 export { generateCSS, generateCSSForGroups, generateStandaloneCSS } from './core/generator';
 export { escapeCssClassIdent } from './core/cssEscape';
 export { parseArbitraryClass, renderArbitraryStandaloneRule, extractArbitraryCandidatesFromSource } from './core/arbitrary';
-export { generateVariantCSS } from './core/variantGenerator';
+export { generateVariantCSS } from './core/variant';
 export { model, getModels, getComponents, registerModels, resetModels } from './core/models';
 export type { ModelEntry, ModelRegistry } from './core/models';
 export {
@@ -27,6 +27,9 @@ export {
   OPACITY_SHORTCUTS,
   SHADOW_SHORTCUTS,
   COLOR_SHORTCUTS,
+  RING_SHORTCUTS,
+  DIVIDE_SHORTCUTS,
+  CONTENT_SHORTCUTS,
 } from './constants/shortcuts.const';
 export { GROUP_LABELS, GROUP_ORDER } from './constants/groups.const';
 export { DEFAULT_PREFIX, DEFAULT_SEPARATOR, DEFAULT_MODE, DEFAULT_GROUPS } from './constants/defaults.const';
@@ -34,7 +37,7 @@ export { DEFAULT_THEME_COLORS } from './constants/defaultThemeColors.const';
 export { DEFAULT_COMPONENT_RECIPES } from './constants/defaultComponentRecipes.const';
 export { listResolvedUtilityNames } from './core/listResolvedUtilities';
 
-export type { AeroCraftConfig, AeroCraftMode, AeroCraftSeparator, AeroCraftGroupsConfig, AeroCraftShortcutEntry, AeroCraftResolvedConfig } from './types/config.types';
+export type { AeroCraftConfig, AeroCraftMode, AeroCraftSeparator, AeroCraftGroupsConfig, AeroCraftShortcutEntry, AeroCraftResolvedConfig, AeroCraftPlugin, AeroCraftPluginApi } from './types/config.types';
 export type { ShortcutDefinition, ShortcutGroup, ShortcutsRegistry } from './types/shortcuts.types';
 
 export function defineConfig(config: import('./types/config.types').AeroCraftConfig): import('./types/config.types').AeroCraftConfig {

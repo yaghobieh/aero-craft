@@ -1,9 +1,10 @@
 import type { PluginCreator } from 'postcss';
 import { resolveConfig } from '../core/parser';
 import { generateCSS, generateCSSForGroups } from '../core/generator';
-import { generateCssFromContentScan } from '../core/scanContent';
-import { generateVariantCSS } from '../core/variantGenerator';
+import { generateCssFromContentScan } from '../core/scanner';
+import { generateVariantCSS } from '../core/variant';
 import type { AeroCraftPluginOptions } from './plugin.types';
+import type { AeroCraftGroupsConfig } from '../types/config.types';
 import {
   AEROCRAFT_AT_RULE,
   AEROCRAFT_BASE_GROUPS,
@@ -23,10 +24,21 @@ import {
   SELECTOR_PSEUDO_SEPARATOR,
 } from './plugin.const';
 
-/**
- * PostCSS plugin that expands `@aerocraft` directives into generated utility CSS.
- * Supports layer subsets (`base`, `fonts`, `layout`, `motion`) and optional variant generation.
- */
+/* ============================== Layer → Group Lookup ============================== */
+
+type LayerGroupList = readonly (keyof AeroCraftGroupsConfig)[];
+
+const LAYER_GROUP_MAP: Record<string, LayerGroupList> = {
+  [AEROCRAFT_LAYER_BASE]: AEROCRAFT_BASE_GROUPS,
+  [AEROCRAFT_LAYER_FONTS]: AEROCRAFT_FONT_GROUPS,
+  [AEROCRAFT_LAYER_TYPOGRAPHY]: AEROCRAFT_FONT_GROUPS,
+  [AEROCRAFT_LAYER_LAYOUT]: AEROCRAFT_LAYOUT_GROUPS,
+  [AEROCRAFT_LAYER_MOTION]: AEROCRAFT_MOTION_GROUPS,
+  [AEROCRAFT_LAYER_INTERACTIVE]: AEROCRAFT_MOTION_GROUPS,
+};
+
+/* ============================== PostCSS Plugin ============================== */
+
 const aerocraftPlugin: PluginCreator<AeroCraftPluginOptions> = (opts?: AeroCraftPluginOptions) => {
   const { darkSelector, ...configOpts } = opts || {};
   const config = resolveConfig(configOpts);
@@ -43,22 +55,11 @@ const aerocraftPlugin: PluginCreator<AeroCraftPluginOptions> = (opts?: AeroCraft
 
       const emit = (param: string) => {
         const p = param.trim();
-        if (!p || p === AEROCRAFT_LAYER_ALL) {
+        const layerGroups = LAYER_GROUP_MAP[p];
+        if (!p || p === AEROCRAFT_LAYER_ALL || !layerGroups) {
           return merge(generateCSS(config));
         }
-        if (p === AEROCRAFT_LAYER_BASE) {
-          return merge(generateCSSForGroups(config, [...AEROCRAFT_BASE_GROUPS]));
-        }
-        if (p === AEROCRAFT_LAYER_FONTS || p === AEROCRAFT_LAYER_TYPOGRAPHY) {
-          return merge(generateCSSForGroups(config, [...AEROCRAFT_FONT_GROUPS]));
-        }
-        if (p === AEROCRAFT_LAYER_LAYOUT) {
-          return merge(generateCSSForGroups(config, [...AEROCRAFT_LAYOUT_GROUPS]));
-        }
-        if (p === AEROCRAFT_LAYER_MOTION || p === AEROCRAFT_LAYER_INTERACTIVE) {
-          return merge(generateCSSForGroups(config, [...AEROCRAFT_MOTION_GROUPS]));
-        }
-        return merge(generateCSS(config));
+        return merge(generateCSSForGroups(config, [...layerGroups]));
       };
 
       root.walkAtRules(AEROCRAFT_AT_RULE, (rule) => {
@@ -71,7 +72,6 @@ const aerocraftPlugin: PluginCreator<AeroCraftPluginOptions> = (opts?: AeroCraft
         root.prepend(parse(emit('all'), { from }));
       }
 
-      // Variant generation: scan source files and generate dark:, hover:, focus:, etc.
       if (config.content.length > 0) {
         const baseRuleMap = new Map<string, Array<[string, string]>>();
         root.walkRules((rule) => {

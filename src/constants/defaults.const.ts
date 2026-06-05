@@ -46,4 +46,7 @@ export const DEFAULT_GROUPS: AeroCraftGroupsConfig = {
   opacity: true,
   shadow: true,
   color: true,
+  ring: true,
+  divide: true,
+  content: true,
 };

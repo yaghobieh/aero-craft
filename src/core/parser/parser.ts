@@ -2,15 +2,18 @@ import type {
   AeroCraftBreakpoints,
   AeroCraftConfig,
   AeroCraftGroupsConfig,
+  AeroCraftPlugin,
+  AeroCraftPluginApi,
   AeroCraftResolvedConfig,
   AeroCraftShortcutEntry,
   AeroCraftTheme,
-} from '../types/config.types';
-import { DEFAULT_BREAKPOINTS, DEFAULT_GROUPS, DEFAULT_MODE, DEFAULT_PREFIX, DEFAULT_SEPARATOR } from '../constants/defaults.const';
-import { DEFAULT_THEME_COLORS } from '../constants/defaultThemeColors.const';
-import { DEFAULT_COMPONENT_RECIPES } from '../constants/defaultComponentRecipes.const';
+} from '../../types/config.types';
+import { DEFAULT_BREAKPOINTS, DEFAULT_GROUPS, DEFAULT_MODE, DEFAULT_PREFIX, DEFAULT_SEPARATOR } from '../../constants/defaults.const';
+import { DEFAULT_THEME_COLORS } from '../../constants/defaultThemeColors.const';
+import { DEFAULT_COMPONENT_RECIPES } from '../../constants/defaultComponentRecipes.const';
+import { expandColor, expandFontFamily, expandSpacing, simple } from './parser.utils';
 
-const DEFAULT_KEY = 'DEFAULT';
+/* ============================== Theme Merging ============================== */
 
 function mergeThemeWithDefaults(theme: AeroCraftTheme | undefined): AeroCraftTheme {
   if (!theme) {
@@ -27,72 +30,7 @@ function mergeThemeWithDefaults(theme: AeroCraftTheme | undefined): AeroCraftThe
   return merged;
 }
 
-function expandColor(name: string, value: unknown): Record<string, AeroCraftShortcutEntry> {
-  const out: Record<string, AeroCraftShortcutEntry> = {};
-  if (typeof value === 'string') {
-    out[`background-${name}`] = colorEntry(name, value, 'background-color', 'background');
-    out[`color-${name}`] = colorEntry(name, value, 'color', 'color');
-    out[`border-color-${name}`] = colorEntry(name, value, 'border-color', 'border');
-    return out;
-  }
-  if (value && typeof value === 'object') {
-    const record = value as Record<string, string>;
-    for (const [shade, hex] of Object.entries(record)) {
-      if (typeof hex !== 'string') continue;
-      const suffix = shade === DEFAULT_KEY ? name : `${name}-${shade}`;
-      out[`background-${suffix}`] = colorEntry(suffix, hex, 'background-color', 'background');
-      out[`color-${suffix}`] = colorEntry(suffix, hex, 'color', 'color');
-      out[`border-color-${suffix}`] = colorEntry(suffix, hex, 'border-color', 'border');
-    }
-    return out;
-  }
-  return out;
-}
-
-function colorEntry(label: string, value: string, cssProp: string, group: string): AeroCraftShortcutEntry {
-  return {
-    css: { [cssProp]: value },
-    description: `${label} (${value})`,
-    group,
-  };
-}
-
-function expandFontFamily(name: string, value: string | string[]): AeroCraftShortcutEntry {
-  const stack = Array.isArray(value) ? value.map(quote).join(', ') : value;
-  return {
-    css: { 'font-family': stack },
-    description: `font-${name}`,
-    group: 'font',
-  };
-}
-
-function quote(name: string): string {
-  return /['"\s]/.test(name) ? name : name.includes(' ') ? `'${name}'` : `'${name}'`;
-}
-
-function expandSpacing(key: string, value: string): Record<string, AeroCraftShortcutEntry> {
-  return {
-    [`p-${key}`]:  simple({ padding: value }, 'spacing', `p-${key}`),
-    [`px-${key}`]: simple({ 'padding-left': value, 'padding-right': value }, 'spacing', `px-${key}`),
-    [`py-${key}`]: simple({ 'padding-top': value, 'padding-bottom': value }, 'spacing', `py-${key}`),
-    [`pt-${key}`]: simple({ 'padding-top': value }, 'spacing', `pt-${key}`),
-    [`pr-${key}`]: simple({ 'padding-right': value }, 'spacing', `pr-${key}`),
-    [`pb-${key}`]: simple({ 'padding-bottom': value }, 'spacing', `pb-${key}`),
-    [`pl-${key}`]: simple({ 'padding-left': value }, 'spacing', `pl-${key}`),
-    [`m-${key}`]:  simple({ margin: value }, 'spacing', `m-${key}`),
-    [`mx-${key}`]: simple({ 'margin-left': value, 'margin-right': value }, 'spacing', `mx-${key}`),
-    [`my-${key}`]: simple({ 'margin-top': value, 'margin-bottom': value }, 'spacing', `my-${key}`),
-    [`mt-${key}`]: simple({ 'margin-top': value }, 'spacing', `mt-${key}`),
-    [`mr-${key}`]: simple({ 'margin-right': value }, 'spacing', `mr-${key}`),
-    [`mb-${key}`]: simple({ 'margin-bottom': value }, 'spacing', `mb-${key}`),
-    [`ml-${key}`]: simple({ 'margin-left': value }, 'spacing', `ml-${key}`),
-    [`gap-${key}`]: simple({ gap: value }, 'gap', `gap-${key}`),
-  };
-}
-
-function simple(css: Record<string, string>, group: string, name: string): AeroCraftShortcutEntry {
-  return { css, description: name, group };
-}
+/* ============================== Shortcut Normalization ============================== */
 
 function normalizeShortcutEntry(entry: AeroCraftShortcutEntry): AeroCraftShortcutEntry {
   const legacy = entry as AeroCraftShortcutEntry & { tailwind?: string };
@@ -106,6 +44,8 @@ function normalizeShortcutEntry(entry: AeroCraftShortcutEntry): AeroCraftShortcu
   }
   return entry;
 }
+
+/* ============================== Component Recipes ============================== */
 
 function mergeComponentRecipes(
   user?: Record<string, Record<string, string>>,
@@ -124,12 +64,12 @@ function mergeComponentRecipes(
   return out;
 }
 
+/* ============================== Theme Expansion ============================== */
+
 function expandTheme(theme: AeroCraftTheme | undefined): {
   shortcuts: Record<string, AeroCraftShortcutEntry>;
   breakpoints: AeroCraftBreakpoints;
 } {
-  const shortcuts: Record<string, AeroCraftShortcutEntry> = {};
-  const breakpoints: AeroCraftBreakpoints = {};
   const merged = mergeThemeWithDefaults(theme);
   return expandThemeLayers(merged);
 }
@@ -180,6 +120,74 @@ function expandThemeLayers(theme: AeroCraftTheme): {
   return { shortcuts, breakpoints };
 }
 
+/* ============================== Plugin Runner ============================== */
+
+function runPlugins(
+  plugins: AeroCraftPlugin[] | undefined,
+  userConfig: AeroCraftConfig,
+): { pluginUtilities: Record<string, Record<string, string>>; pluginComponents: Record<string, Record<string, string>> } {
+  const pluginUtilities: Record<string, Record<string, string>> = {};
+  const pluginComponents: Record<string, Record<string, string>> = {};
+
+  if (!plugins || plugins.length === 0) return { pluginUtilities, pluginComponents };
+
+  const prefix = userConfig.prefix ?? DEFAULT_PREFIX;
+  const separator = userConfig.separator ?? DEFAULT_SEPARATOR;
+
+  const api: AeroCraftPluginApi = {
+    addUtilities(utilities, options) {
+      const respectPrefix = options?.respectPrefix ?? true;
+      for (const [selector, css] of Object.entries(utilities)) {
+        const finalSelector = respectPrefix && prefix && !selector.startsWith('.')
+          ? `.${prefix}${separator}${selector.replace(/^\./, '')}`
+          : selector;
+        pluginUtilities[finalSelector] = css;
+      }
+    },
+    addComponents(components, options) {
+      const respectPrefix = options?.respectPrefix ?? true;
+      for (const [selector, css] of Object.entries(components)) {
+        const finalSelector = respectPrefix && prefix && !selector.startsWith('.')
+          ? `.${prefix}${separator}${selector.replace(/^\./, '')}`
+          : selector;
+        pluginComponents[finalSelector] = css;
+      }
+    },
+    theme(path: string) {
+      const keys = path.split('.');
+      let current: unknown = userConfig.theme;
+      for (const key of keys) {
+        if (current && typeof current === 'object') {
+          current = (current as Record<string, unknown>)[key];
+        } else {
+          return undefined;
+        }
+      }
+      return current;
+    },
+    config(path: string) {
+      const keys = path.split('.');
+      let current: unknown = userConfig;
+      for (const key of keys) {
+        if (current && typeof current === 'object') {
+          current = (current as Record<string, unknown>)[key];
+        } else {
+          return undefined;
+        }
+      }
+      return current;
+    },
+  };
+
+  for (const plugin of plugins) {
+    plugin(api);
+  }
+
+  return { pluginUtilities, pluginComponents };
+}
+
+/* ============================== Config Resolution ============================== */
+
 export function resolveConfig(userConfig: AeroCraftConfig = {}): AeroCraftResolvedConfig {
   const groups: AeroCraftGroupsConfig =
     userConfig.groups === 'all'
@@ -193,6 +201,8 @@ export function resolveConfig(userConfig: AeroCraftConfig = {}): AeroCraftResolv
     Object.entries(mergedCustomRaw).map(([k, v]) => [k, normalizeShortcutEntry(v)]),
   );
 
+  const { pluginUtilities, pluginComponents } = runPlugins(userConfig.plugins, userConfig);
+
   return {
     prefix: userConfig.prefix ?? DEFAULT_PREFIX,
     separator: userConfig.separator ?? DEFAULT_SEPARATOR,
@@ -204,12 +214,11 @@ export function resolveConfig(userConfig: AeroCraftConfig = {}): AeroCraftResolv
     componentRecipes: mergeComponentRecipes(userConfig.componentRecipes),
     content: userConfig.content ?? [],
     injectWithoutDirective: userConfig.injectWithoutDirective ?? false,
+    pluginUtilities,
+    pluginComponents,
   };
 }
 
-/**
- * Builds the final class token (for example `ac-flex` or `flex` when prefix is empty).
- */
 export function buildClassName(prefix: string, separator: string, name: string): string {
   if (!prefix) return name;
   return `${prefix}${separator}${name}`;
