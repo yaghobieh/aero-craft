@@ -74,7 +74,15 @@ import {
   BORDER_WIDTHS,
   RADIUS_SIZES,
   SHADOW_LEVELS,
+  NESTED_SIBLING_SELECTOR,
+  AC_GRADIENT_FROM,
+  AC_GRADIENT_VIA,
+  AC_GRADIENT_TO,
+  AC_GRADIENT_STOPS,
+  AC_GRADIENT_STOPS_FROM_TO,
+  AC_GRADIENT_STOPS_WITH_VIA,
 } from './numbers.const';
+import { DEFAULT_THEME_COLORS } from './defaultThemeColors.const';
 
 const d = (name: string, group: string, utilityRecipe: string, css: Record<string, string>, desc: string): ShortcutDefinition => ({
   name,
@@ -750,8 +758,14 @@ SPACING_SCALE.forEach(([n, val]) => {
   SPACING_SHORTCUTS[`mr-${n}`] = d(`mr-${n}`, 'spacing', `mr-${n}`, { 'margin-right': val }, `margin-right: ${val}`);
   SPACING_SHORTCUTS[`mb-${n}`] = d(`mb-${n}`, 'spacing', `mb-${n}`, { 'margin-bottom': val }, `margin-bottom: ${val}`);
   SPACING_SHORTCUTS[`ml-${n}`] = d(`ml-${n}`, 'spacing', `ml-${n}`, { 'margin-left': val }, `margin-left: ${val}`);
-  SPACING_SHORTCUTS[`space-x-${n}`] = d(`space-x-${n}`, 'spacing', `space-x-${n}`, { gap: val }, `space-x (gap-x): ${val}`);
-  SPACING_SHORTCUTS[`space-y-${n}`] = d(`space-y-${n}`, 'spacing', `space-y-${n}`, { gap: val }, `space-y (gap-y): ${val}`);
+  const spaceX = d(`space-x-${n}`, 'spacing', `space-x-${n}`, {}, `Sibling margin-inline-start: ${val}`);
+  spaceX.nestedSelector = NESTED_SIBLING_SELECTOR;
+  spaceX.nestedCss = { 'margin-inline-start': val };
+  SPACING_SHORTCUTS[`space-x-${n}`] = spaceX;
+  const spaceY = d(`space-y-${n}`, 'spacing', `space-y-${n}`, {}, `Sibling margin-block-start: ${val}`);
+  spaceY.nestedSelector = NESTED_SIBLING_SELECTOR;
+  spaceY.nestedCss = { 'margin-block-start': val };
+  SPACING_SHORTCUTS[`space-y-${n}`] = spaceY;
   if (val !== SPACING_0) {
     const neg = negate(val);
     SPACING_SHORTCUTS[`-m-${n}`] = d(`-m-${n}`, 'spacing', `-m-${n}`, { margin: neg }, `margin: ${neg}`);
@@ -872,24 +886,23 @@ Object.entries(BASIC_COLORS).forEach(([key, val]) => {
   COLOR_SHORTCUTS[`border-color-${key}`] = d(`border-color-${key}`, 'color', `border-color-${key}`, { 'border-color': val }, `border-color: ${val}`);
 });
 
-const GRAY_SCALE: Record<string, string> = {
-  '50': '#f8fafc',
-  '100': '#f1f5f9',
-  '200': '#e2e8f0',
-  '300': '#cbd5e1',
-  '400': '#94a3b8',
-  '500': '#64748b',
-  '600': '#475569',
-  '700': '#334155',
-  '800': '#1e293b',
-  '900': '#0f172a',
-  '950': '#020617',
-};
+const THEME_COLOR_ENTRIES: Array<[string, string]> = [];
 
-Object.entries(GRAY_SCALE).forEach(([key, val]) => {
-  COLOR_SHORTCUTS[`background-gray-${key}`] = d(`background-gray-${key}`, 'color', `background-gray-${key}`, { 'background-color': val }, `background-color: ${val}`);
-  COLOR_SHORTCUTS[`color-gray-${key}`] = d(`color-gray-${key}`, 'color', `color-gray-${key}`, { color: val }, `color: ${val}`);
-  COLOR_SHORTCUTS[`border-color-gray-${key}`] = d(`border-color-gray-${key}`, 'color', `border-color-gray-${key}`, { 'border-color': val }, `border-color: ${val}`);
+for (const [family, value] of Object.entries(DEFAULT_THEME_COLORS)) {
+  if (typeof value === 'string') {
+    THEME_COLOR_ENTRIES.push([family, value]);
+    continue;
+  }
+  for (const [shade, hex] of Object.entries(value)) {
+    if (shade === 'DEFAULT' || shade === '25') continue;
+    THEME_COLOR_ENTRIES.push([`${family}-${shade}`, hex]);
+  }
+}
+
+THEME_COLOR_ENTRIES.forEach(([key, val]) => {
+  COLOR_SHORTCUTS[`background-${key}`] = d(`background-${key}`, 'color', `background-${key}`, { 'background-color': val }, `background-color: ${val}`);
+  COLOR_SHORTCUTS[`color-${key}`] = d(`color-${key}`, 'color', `color-${key}`, { color: val }, `color: ${val}`);
+  COLOR_SHORTCUTS[`border-color-${key}`] = d(`border-color-${key}`, 'color', `border-color-${key}`, { 'border-color': val }, `border-color: ${val}`);
 });
 
 Object.assign(SIZE_SHORTCUTS, SIZE_EXTRA_SHORTCUTS);
@@ -919,8 +932,8 @@ Object.entries(BASIC_COLORS).forEach(([key, val]) => {
   RING_SHORTCUTS[`ring-offset-${key}`] = d(`ring-offset-${key}`, 'ring', `ring-offset-${key}`, { '--ac-ring-offset-color': val }, `Ring offset color: ${val}`);
 });
 
-Object.entries(GRAY_SCALE).forEach(([key, val]) => {
-  RING_SHORTCUTS[`ring-gray-${key}`] = d(`ring-gray-${key}`, 'ring', `ring-gray-${key}`, { '--ac-ring-color': val }, `Ring color: gray-${key}`);
+THEME_COLOR_ENTRIES.forEach(([key, val]) => {
+  RING_SHORTCUTS[`ring-${key}`] = d(`ring-${key}`, 'ring', `ring-${key}`, { '--ac-ring-color': val }, `Ring color: ${key}`);
 });
 
 /* ============================== Divide Utilities ============================== */
@@ -945,11 +958,11 @@ export const DIVIDE_SHORTCUTS: Record<string, ShortcutDefinition> = {
 
 for (const shortcut of Object.values(DIVIDE_SHORTCUTS)) {
   if (shortcut.name.startsWith('divide-x') && !shortcut.name.includes('solid') && !shortcut.name.includes('dashed') && !shortcut.name.includes('dotted') && !shortcut.name.includes('double') && !shortcut.name.includes('none')) {
-    shortcut.nestedSelector = ' > * + *';
+    shortcut.nestedSelector = NESTED_SIBLING_SELECTOR;
     shortcut.nestedCss = { ...shortcut.css };
     shortcut.css = {};
   } else if (shortcut.name.startsWith('divide-y') && !shortcut.name.includes('solid') && !shortcut.name.includes('dashed') && !shortcut.name.includes('dotted') && !shortcut.name.includes('double') && !shortcut.name.includes('none')) {
-    shortcut.nestedSelector = ' > * + *';
+    shortcut.nestedSelector = NESTED_SIBLING_SELECTOR;
     shortcut.nestedCss = { ...shortcut.css };
     shortcut.css = {};
   }
@@ -957,16 +970,46 @@ for (const shortcut of Object.values(DIVIDE_SHORTCUTS)) {
 
 Object.entries(BASIC_COLORS).forEach(([key, val]) => {
   const s = d(`divide-${key}`, 'divide', `divide-${key}`, {}, `Divide color: ${val}`);
-  s.nestedSelector = ' > * + *';
+  s.nestedSelector = NESTED_SIBLING_SELECTOR;
   s.nestedCss = { 'border-color': val };
   DIVIDE_SHORTCUTS[`divide-${key}`] = s;
 });
 
-Object.entries(GRAY_SCALE).forEach(([key, val]) => {
-  const s = d(`divide-gray-${key}`, 'divide', `divide-gray-${key}`, {}, `Divide color: gray-${key}`);
-  s.nestedSelector = ' > * + *';
+THEME_COLOR_ENTRIES.forEach(([key, val]) => {
+  const s = d(`divide-${key}`, 'divide', `divide-${key}`, {}, `Divide color: ${key}`);
+  s.nestedSelector = NESTED_SIBLING_SELECTOR;
   s.nestedCss = { 'border-color': val };
-  DIVIDE_SHORTCUTS[`divide-gray-${key}`] = s;
+  DIVIDE_SHORTCUTS[`divide-${key}`] = s;
+});
+
+/* ============================== Gradient stop utilities ============================== */
+
+THEME_COLOR_ENTRIES.forEach(([key, val]) => {
+  BACKGROUND_SHORTCUTS[`from-${key}`] = d(`from-${key}`, 'background', `from-${key}`, {
+    [AC_GRADIENT_FROM]: val,
+    [AC_GRADIENT_STOPS]: AC_GRADIENT_STOPS_FROM_TO,
+  }, `Gradient from: ${key}`);
+  BACKGROUND_SHORTCUTS[`via-${key}`] = d(`via-${key}`, 'background', `via-${key}`, {
+    [AC_GRADIENT_VIA]: val,
+    [AC_GRADIENT_STOPS]: AC_GRADIENT_STOPS_WITH_VIA,
+  }, `Gradient via: ${key}`);
+  BACKGROUND_SHORTCUTS[`to-${key}`] = d(`to-${key}`, 'background', `to-${key}`, {
+    [AC_GRADIENT_TO]: val,
+  }, `Gradient to: ${key}`);
+});
+
+Object.entries(BASIC_COLORS).forEach(([key, val]) => {
+  BACKGROUND_SHORTCUTS[`from-${key}`] = d(`from-${key}`, 'background', `from-${key}`, {
+    [AC_GRADIENT_FROM]: val,
+    [AC_GRADIENT_STOPS]: AC_GRADIENT_STOPS_FROM_TO,
+  }, `Gradient from: ${key}`);
+  BACKGROUND_SHORTCUTS[`via-${key}`] = d(`via-${key}`, 'background', `via-${key}`, {
+    [AC_GRADIENT_VIA]: val,
+    [AC_GRADIENT_STOPS]: AC_GRADIENT_STOPS_WITH_VIA,
+  }, `Gradient via: ${key}`);
+  BACKGROUND_SHORTCUTS[`to-${key}`] = d(`to-${key}`, 'background', `to-${key}`, {
+    [AC_GRADIENT_TO]: val,
+  }, `Gradient to: ${key}`);
 });
 
 /* ============================== Content Utilities ============================== */

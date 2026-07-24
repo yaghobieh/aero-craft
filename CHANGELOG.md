@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.0.6] - 2026-07-24
+
+### Added
+- **Runtime module** (`@forgedevstack/aerocraft/runtime`) — CSS Typed OM / `attributeStyleMap` style application with `element.style` fallback and optional WeakMap registry. For high-frequency numeric updates; class shortcuts remain the static path.
+- **Unified default palette** — `DEFAULT_THEME_COLORS` is now the single source of truth for zinc, gray, slate, neutral, red, green, blue, yellow, orange, amber, emerald, cyan, purple, pink (+ white/black). Variant scanner colors and ring/divide/color shortcuts derive from it.
+- **Static gradient stops** — first-class `from-*` / `via-*` / `to-*` shortcuts compose with `bg-gradient-to-*` via `--ac-gradient-*` tokens.
+- **Vitest regression suite** — PostCSS plugin, variants, gradients, `space-x` / `divide-x`, plugin API, and runtime tests (`npm test`).
+- **GitHub Actions publish workflow** — ForgeStack-aligned `.github/workflows/publish.yml` (typecheck → test → build → publish).
+
+### Fixed
+- **Gradient CSS variables** — content-scanned `from` / `via` / `to` now set `--ac-gradient-*` (was `--tw-gradient-*`), matching direction shortcuts.
+- **`space-x` / `space-y`** — emit nested sibling `margin-inline-start` / `margin-block-start` via `> * + *` instead of `gap` (**behavioral fix**; `gap-*` utilities unchanged).
+- **Gray scale** — ring/divide/color gray utilities use true gray (no longer slate hex under the name gray).
+
+### Changed
+- **Core modules** — removed legacy flat duplicates (`generator.ts`, `arbitrary.ts`, `models.ts`, `variantGenerator.ts`, `scanContent.ts`); folder barrels are canonical.
+- **`darkSelector` docs/types** — documented default is `.dark, .bear-dark`.
+- README and portal docs synced with native variants and 1.0.5+ features.
+
 ## [1.0.5] - 2026-05-14
 
 ### Added

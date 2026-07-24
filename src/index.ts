@@ -33,7 +33,7 @@ export {
 } from './constants/shortcuts.const';
 export { GROUP_LABELS, GROUP_ORDER } from './constants/groups.const';
 export { DEFAULT_PREFIX, DEFAULT_SEPARATOR, DEFAULT_MODE, DEFAULT_GROUPS } from './constants/defaults.const';
-export { DEFAULT_THEME_COLORS } from './constants/defaultThemeColors.const';
+export { DEFAULT_THEME_COLORS, DEFAULT_SCANNER_COLORS } from './constants/defaultThemeColors.const';
 export { DEFAULT_COMPONENT_RECIPES } from './constants/defaultComponentRecipes.const';
 export { listResolvedUtilityNames } from './core/listResolvedUtilities';
 

@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
 
@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     dts({
       include: ['src'],
-      exclude: ['src/**/*.test.*'],
+      exclude: ['src/**/*.test.*', 'tests/**'],
       insertTypesEntry: true,
     }),
   ],
@@ -24,6 +24,7 @@ export default defineConfig({
         index: resolve(__dirname, 'src/index.ts'),
         'postcss/index': resolve(__dirname, 'src/postcss/index.ts'),
         'react/index': resolve(__dirname, 'src/react/index.ts'),
+        'runtime/index': resolve(__dirname, 'src/runtime/index.ts'),
       },
       formats: ['es', 'cjs'],
     },
@@ -36,5 +37,9 @@ export default defineConfig({
     },
     sourcemap: true,
     minify: 'esbuild',
+  },
+  test: {
+    environment: 'node',
+    include: ['tests/**/*.test.ts', 'src/**/*.test.ts'],
   },
 });

@@ -3,6 +3,15 @@ import { globSync } from 'glob';
 import type { AeroCraftResolvedConfig } from '../../types/config.types';
 import { escapeCssClassIdent } from '../cssEscape';
 import {
+  AC_GRADIENT_FROM,
+  AC_GRADIENT_STOPS,
+  AC_GRADIENT_STOPS_FROM_TO,
+  AC_GRADIENT_STOPS_WITH_VIA,
+  AC_GRADIENT_TO,
+  AC_GRADIENT_VIA,
+  AC_SHADOW_COLOR,
+} from '../../constants/numbers.const';
+import {
   VARIANT_SELECTOR_MAP,
   KNOWN_SELECTOR_VARIANTS,
   MEDIA_VARIANT_MAP,
@@ -91,10 +100,10 @@ function propToCss(utilProp: string, value: string): CssDecl[] | null {
     border:      [['border-color', value]],
     ring:        [['--ac-ring-color', value]],
     divide:      [['border-color', value]],
-    from:        [['--tw-gradient-from', value]],
-    to:          [['--tw-gradient-to', value]],
-    via:         [['--tw-gradient-via', value]],
-    shadow:      [['--tw-shadow-color', value]],
+    from:        [[AC_GRADIENT_FROM, value], [AC_GRADIENT_STOPS, AC_GRADIENT_STOPS_FROM_TO]],
+    to:          [[AC_GRADIENT_TO, value]],
+    via:         [[AC_GRADIENT_VIA, value], [AC_GRADIENT_STOPS, AC_GRADIENT_STOPS_WITH_VIA]],
+    shadow:      [[AC_SHADOW_COLOR, value]],
     placeholder: [['color', value]],
     fill:        [['fill', value]],
     stroke:      [['stroke', value]],

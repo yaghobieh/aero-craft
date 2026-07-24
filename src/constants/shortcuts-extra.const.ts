@@ -1,4 +1,5 @@
 import type { ShortcutDefinition } from '../types/shortcuts.types';
+import { AC_GRADIENT_IMAGE } from './numbers.const';
 
 const d = (name: string, group: string, utilityRecipe: string, css: Record<string, string>, desc: string): ShortcutDefinition => ({
   name,
@@ -124,10 +125,10 @@ export const BACKGROUND_SHORTCUTS: Record<string, ShortcutDefinition> = {
   'bg-contain': d('bg-contain', 'background', 'bg-contain', { 'background-size': 'contain' }, 'background-size: contain'),
 
   'bg-none': d('bg-none', 'background', 'bg-none', { 'background-image': 'none' }, 'background-image: none'),
-  'bg-gradient-to-t': d('bg-gradient-to-t', 'background', 'bg-gradient-to-t', { 'background-image': 'linear-gradient(to top, var(--ac-gradient-from), var(--ac-gradient-to))' }, 'linear-gradient to top'),
-  'bg-gradient-to-r': d('bg-gradient-to-r', 'background', 'bg-gradient-to-r', { 'background-image': 'linear-gradient(to right, var(--ac-gradient-from), var(--ac-gradient-to))' }, 'linear-gradient to right'),
-  'bg-gradient-to-b': d('bg-gradient-to-b', 'background', 'bg-gradient-to-b', { 'background-image': 'linear-gradient(to bottom, var(--ac-gradient-from), var(--ac-gradient-to))' }, 'linear-gradient to bottom'),
-  'bg-gradient-to-l': d('bg-gradient-to-l', 'background', 'bg-gradient-to-l', { 'background-image': 'linear-gradient(to left, var(--ac-gradient-from), var(--ac-gradient-to))' }, 'linear-gradient to left'),
+  'bg-gradient-to-t': d('bg-gradient-to-t', 'background', 'bg-gradient-to-t', { 'background-image': AC_GRADIENT_IMAGE('to top') }, 'linear-gradient to top'),
+  'bg-gradient-to-r': d('bg-gradient-to-r', 'background', 'bg-gradient-to-r', { 'background-image': AC_GRADIENT_IMAGE('to right') }, 'linear-gradient to right'),
+  'bg-gradient-to-b': d('bg-gradient-to-b', 'background', 'bg-gradient-to-b', { 'background-image': AC_GRADIENT_IMAGE('to bottom') }, 'linear-gradient to bottom'),
+  'bg-gradient-to-l': d('bg-gradient-to-l', 'background', 'bg-gradient-to-l', { 'background-image': AC_GRADIENT_IMAGE('to left') }, 'linear-gradient to left'),
 };
 
 export const OUTLINE_SHORTCUTS: Record<string, ShortcutDefinition> = {

@@ -23,8 +23,13 @@ Shortcut-first utility classes for CSS for [ForgeStack](https://forgedevstack.co
 ## Features
 
 - **180+ shortcuts** — layout, flex, grid, spacing, typography, motion, filters, and more.
-- **All variants built in** — `dark:`, `hover:`, `focus:`, `active:`, `disabled:`, `group-hover:`, `placeholder:`, `focus-visible:`, `focus-within:`, `first:`, `last:`, `odd:`, `even:`, and compound variants like `dark:hover:`, `dark:focus:`.
+- **All variants built in** — `dark:`, `hover:`, `focus:`, `active:`, `disabled:`, `group-hover:`, `placeholder:`, `focus-visible:`, `focus-within:`, `first:`, `last:`, `odd:`, `even:`, plus **1.0.5+**: `@container:`, `print:`, `aria-*`, `data-*`, `motion-reduce:` / `motion-safe:`, `supports-*`, `portrait:` / `landscape:`, `contrast-more:` / `contrast-less:`, and compound variants like `dark:hover:`.
 - **Content scanning** — AeroCraft reads your source files and generates only the variant CSS you actually use. Zero waste.
+- **Default palette** — zinc, gray, slate, neutral, red, green, blue, yellow, orange, amber, emerald, cyan, purple, pink (+ white/black) ship as theme utilities out of the box.
+- **Gradients** — `bg-gradient-to-*` + `from-*` / `via-*` / `to-*` share `--ac-gradient-*` tokens.
+- **Sibling spacing** — `space-x-*` / `space-y-*` use nested `> * + *` margins (not `gap`).
+- **Ring / divide / content** — first-class utility groups.
+- **Plugin API** — `plugins: [{ addUtilities, addComponents, theme, config }]`.
 - **Opacity modifiers** — `bear-bg-primary-500/30` works out of the box, including CSS variable colors via `color-mix()`.
 - **SVG support** — `fill` and `stroke` utilities with full palette and dark mode variants.
 - **Theme-aware primary colors** — `bear-bg-primary-*` references `var(--bear-primary-*)` CSS variables for runtime theme switching.
@@ -33,6 +38,7 @@ Shortcut-first utility classes for CSS for [ForgeStack](https://forgedevstack.co
 - **Design tokens** from a single `theme` object: colors, spacing, fonts, radii, shadows, breakpoints.
 - **Component recipes** — named presets like `circle-button`, `input-rounded`.
 - **CLI** (`aerocraft build`, `aerocraft init`) and optional **React** helpers.
+- **Runtime (optional)** — `@forgedevstack/aerocraft/runtime` for high-frequency numeric style updates via CSS Typed OM with `element.style` fallback. Class shortcuts remain the static path.
 - **Pre-built CSS** at `@forgedevstack/aerocraft/styles.css` for quick prototyping.
 
 ## Quick Start
@@ -163,7 +169,28 @@ Dark mode is **built into AeroCraft's core** — no companion plugin needed. Jus
 
 The `darkSelector` config option controls which CSS class triggers dark mode. Default: `.dark, .bear-dark`.
 
-Supported variants: `dark:`, `hover:`, `focus:`, `focus-visible:`, `focus-within:`, `active:`, `disabled:`, `group-hover:`, `placeholder:`, `first:`, `last:`, `odd:`, `even:`, and all compound combinations.
+Supported variants include: `dark:`, `hover:`, `focus:`, `focus-visible:`, `focus-within:`, `active:`, `disabled:`, `visited:`, `checked:`, `group-*`, `peer-*`, `placeholder:`, `before:` / `after:`, `first:` / `last:` / `odd:` / `even:`, `@container:`, `print:`, `aria-*`, `data-*`, `motion-reduce:` / `motion-safe:`, `supports-*`, `portrait:` / `landscape:`, `contrast-more:` / `contrast-less:`, and all compound combinations.
+
+### Gradients
+
+```html
+<div class="bear-bg-gradient-to-r bear-from-blue-500 bear-via-purple-500 bear-to-pink-500"></div>
+```
+
+Direction utilities and color stops share `--ac-gradient-from` / `--ac-gradient-via` / `--ac-gradient-to` / `--ac-gradient-stops`.
+
+### Runtime styles (optional)
+
+For animation loops and other high-frequency numeric updates, use the runtime module instead of rewriting class strings:
+
+```ts
+import { applyStyle } from '@forgedevstack/aerocraft/runtime';
+
+const handle = applyStyle(el, { width: 120, opacity: { value: 0.8, unit: 'number' } });
+handle.set({ transform: 'translateY(8px)' });
+```
+
+Uses CSS Typed OM (`attributeStyleMap` + `CSS.px`) when available, otherwise `element.style`. Keep static layout on class shortcuts.
 
 ### Component presets
 
@@ -195,7 +222,23 @@ Best for demos; production should use PostCSS so `theme` and `customShortcuts` a
 
 ## Editor tooling
 
-The **aero-craft-plugin** repo ships a VS Code / Cursor extension (completions, snippets, optional alias mode).
+The **aero-craft-plugin** repo ships a VS Code / Cursor extension (completions, snippets, optional alias mode). It depends on `@forgedevstack/aerocraft` and reads `aerocraft.config.*` for the configured `prefix` / `separator`.
+
+## Tests
+
+```bash
+npm test
+```
+
+Vitest covers PostCSS expansion, native variants, gradients, `space-x` / `divide-x`, the plugin API, and the runtime fallback path.
+
+## Publishing
+
+GitHub Actions (`.github/workflows/publish.yml`) runs typecheck, tests, and build on push to `master`/`main` and on `workflow_dispatch`.
+
+Required repository secret: `NPM_TOKEN` (npm automation token). Workflow permissions: `contents: write`, `id-token: write` (provenance).
+
+Manual / tagged releases whose commit message starts with `release:` skip the automated patch bump so you can ship an exact version.
 
 ## Documentation
 

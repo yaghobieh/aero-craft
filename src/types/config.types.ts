@@ -105,7 +105,7 @@ export interface AeroCraftConfig {
    */
   componentRecipes?: Record<string, Record<string, string>>;
   /**
-   * CSS selector for dark mode. Default: `.dark`.
+   * CSS selector for dark mode. Default: `.dark, .bear-dark`.
    * The dark variant (`dark:bear-bg-*`) wraps rules in this selector scope.
    */
   darkSelector?: string;

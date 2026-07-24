@@ -1,6 +1,6 @@
 {
   "name": "@forgedevstack/aerocraft",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Composable shortcut utility classes for CSS. PostCSS plugin with configurable prefix and standalone output.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -21,6 +21,11 @@
       "types": "./dist/react/index.d.ts",
       "import": "./dist/react/index.js",
       "require": "./dist/react/index.cjs"
+    },
+    "./runtime": {
+      "types": "./dist/runtime/index.d.ts",
+      "import": "./dist/runtime/index.js",
+      "require": "./dist/runtime/index.cjs"
     },
     "./styles.css": "./dist/styles.css"
   },
@@ -43,6 +48,8 @@
     "prepare": "echo 'skipping prepare for local dev'",
     "lint": "eslint . --ext ts",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
@@ -67,7 +74,8 @@
     "react": "^19.2.5",
     "typescript": "^5.7.3",
     "vite": "^6.0.7",
-    "vite-plugin-dts": "^4.4.0"
+    "vite-plugin-dts": "^4.4.0",
+    "vitest": "^3.2.7"
   },
   "keywords": [
     "css",

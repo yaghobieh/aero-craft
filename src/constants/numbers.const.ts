@@ -109,3 +109,16 @@ export const SHADOW_LEVELS: Record<string, string> = {
   '2xl': '0 25px 50px -12px rgb(0 0 0 / 0.25)',
   inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
 };
+
+export const NESTED_SIBLING_SELECTOR = ' > * + *';
+
+export const AC_GRADIENT_FROM = '--ac-gradient-from';
+export const AC_GRADIENT_VIA = '--ac-gradient-via';
+export const AC_GRADIENT_TO = '--ac-gradient-to';
+export const AC_GRADIENT_STOPS = '--ac-gradient-stops';
+export const AC_SHADOW_COLOR = '--ac-shadow-color';
+export const AC_GRADIENT_TO_FALLBACK = 'transparent';
+export const AC_GRADIENT_STOPS_FROM_TO = `var(${AC_GRADIENT_FROM}), var(${AC_GRADIENT_TO}, ${AC_GRADIENT_TO_FALLBACK})`;
+export const AC_GRADIENT_STOPS_WITH_VIA = `var(${AC_GRADIENT_FROM}), var(${AC_GRADIENT_VIA}), var(${AC_GRADIENT_TO}, ${AC_GRADIENT_TO_FALLBACK})`;
+export const AC_GRADIENT_IMAGE = (direction: string): string =>
+  `linear-gradient(${direction}, var(${AC_GRADIENT_STOPS}))`;
