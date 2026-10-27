@@ -107,6 +107,23 @@ describe('AeroCraft PostCSS plugin', () => {
     expect(css).toContain('border-left-width');
   });
 
+  it('emits horizon and recipe classes Tailwind does not ship', () => {
+    const css = generateStandaloneCSS(resolveConfig({ prefix: '', groups: 'all' }));
+    expect(css).toContain('.scroll-fade');
+    expect(css).toContain('animation-timeline: view()');
+    expect(css).toContain('field-sizing: content');
+    expect(css).toContain('.stack');
+    expect(css).toContain('flex-basis: calc((20rem - 100%) * 999)');
+    expect(css).toContain('grid-template-rows: masonry');
+    expect(css).toContain('margin-trim: block');
+    expect(css).toContain('animation-composition: accumulate');
+    expect(css).toContain('scroll-marker-group: after');
+    expect(css).toContain('.pancake');
+    expect(css).toContain('grid-template-rows: auto 1fr auto');
+    expect(css).toContain('.with-footer');
+    expect(css).toContain('margin-block-start: auto');
+  });
+
   it('ships unified default palette families', () => {
     const css = generateStandaloneCSS(resolveConfig({
       prefix: 'bear',

@@ -49,4 +49,6 @@ export const DEFAULT_GROUPS: AeroCraftGroupsConfig = {
   ring: true,
   divide: true,
   content: true,
+  horizon: true,
+  recipes: true,
 };
