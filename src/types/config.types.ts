@@ -48,6 +48,8 @@ export interface AeroCraftGroupsConfig {
   ring?: boolean;
   divide?: boolean;
   content?: boolean;
+  horizon?: boolean;
+  recipes?: boolean;
 }
 
 export type AeroCraftColorValue = string | Record<string, string>;

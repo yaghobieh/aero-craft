@@ -122,3 +122,30 @@ export const AC_GRADIENT_STOPS_FROM_TO = `var(${AC_GRADIENT_FROM}), var(${AC_GRA
 export const AC_GRADIENT_STOPS_WITH_VIA = `var(${AC_GRADIENT_FROM}), var(${AC_GRADIENT_VIA}), var(${AC_GRADIENT_TO}, ${AC_GRADIENT_TO_FALLBACK})`;
 export const AC_GRADIENT_IMAGE = (direction: string): string =>
   `linear-gradient(${direction}, var(${AC_GRADIENT_STOPS}))`;
+
+export const HORIZON_STACK_GAP = '1rem';
+export const HORIZON_CLUSTER_GAP = '0.75rem';
+export const HORIZON_SIDEBAR_MIN = '16rem';
+export const HORIZON_SWITCHER_MIN = '20rem';
+export const HORIZON_INITIAL_LETTER = '3';
+export const HORIZON_SIBLING_STEP = '1.25rem';
+export const HORIZON_FLUID_MIN = '1rem';
+export const HORIZON_FLUID_MAX = '1.75rem';
+export const HORIZON_SCROLL_FADE = '24px';
+export const HORIZON_SAFE_TOP = 'env(safe-area-inset-top)';
+export const HORIZON_SAFE_RIGHT = 'env(safe-area-inset-right)';
+export const HORIZON_SAFE_BOTTOM = 'env(safe-area-inset-bottom)';
+export const HORIZON_SAFE_LEFT = 'env(safe-area-inset-left)';
+export const HORIZON_CHILD_SELECTOR = ' > *';
+export const HORIZON_FIRST_CHILD_SELECTOR = ' > :first-child';
+export const HORIZON_LAST_CHILD_SELECTOR = ' > :last-child';
+export const HORIZON_CLIP_MARGIN = '8px';
+export const HORIZON_INTEREST_DELAY = '0.5s';
+export const HORIZON_TIMELINE_SCOPE = '--ac';
+export const HORIZON_VIEW_CLASS = 'ac-pair';
+export const HORIZON_FRAME_SQUARE = '1 / 1';
+export const HORIZON_FRAME_STORY = '9 / 16';
+export const HORIZON_PANCAKE_ROWS = 'auto 1fr auto';
+export const HORIZON_DOCK_PAD = '0.75rem';
+export const HORIZON_ICON_SIZE = '1em';
+export const HORIZON_ICON_NUDGE = '-0.125em';

@@ -35,6 +35,8 @@ export const GROUP_LABELS: Record<string, string> = {
   ring: 'Ring',
   divide: 'Divide',
   content: 'Content',
+  horizon: 'Beyond Tailwind',
+  recipes: 'Layout recipes',
 };
 
 export const GROUP_ORDER = [
@@ -74,6 +76,8 @@ export const GROUP_ORDER = [
   'content',
   'svg',
   'a11y',
+  'horizon',
+  'recipes',
 ] as const;
 
 export type GroupName = (typeof GROUP_ORDER)[number];
@@ -97,4 +101,6 @@ export const PORTAL_CATEGORIES: Array<{
   { id: 'interact', label: 'Interact', groups: ['interactive', 'cursor', 'scroll'] },
   { id: 'svg', label: 'SVG', groups: ['svg'] },
   { id: 'a11y', label: 'Accessibility', groups: ['a11y'] },
+  { id: 'horizon', label: 'Beyond Tailwind', groups: ['horizon'] },
+  { id: 'recipes', label: 'Layout recipes', groups: ['recipes'] },
 ];

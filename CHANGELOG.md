@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0] - 2026-10-27
+
+### Added
+- **Horizon group** — utilities Tailwind core does not ship: scroll-driven animation timelines, field-sizing, text-box trim, initial-letter, scrollbar width and gutter, safe-area padding, `light-dark()`, interpolate-size, corner-shape, sibling-index, contrast-color, reading-flow, masonry, content-visibility, anchor positioning, view transitions, fluid type, hyphens, overlay, and scroll-target groups.
+- **More horizon** — margin trim, discrete transitions, animation composition, timeline scope, overflow clip margin, anchor visibility and size, text autospace, dynamic range, base-select appearance, block caret, scroll markers, interest delay, view-transition class, white-space collapse, and ruby position.
+- **Recipes group** — one-class layouts: stack, cluster, sidebar, switcher, cover, frame, reel, center, and auto-fit grid.
+- **More recipes** — pancake, imposter, repel, dock, square frame, story frame, inline icon, and with-footer.
+
 ## [1.0.6] - 2026-07-24
 
 ### Added

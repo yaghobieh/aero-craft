@@ -18,6 +18,7 @@ import {
   FONT_EXTRA_SHORTCUTS,
   SIZE_EXTRA_SHORTCUTS,
 } from './shortcuts-extra.const';
+import { HORIZON_SHORTCUTS, RECIPE_SHORTCUTS } from './shortcuts-horizon.const';
 import {
   TRANSITION_FAST_MS,
   TRANSITION_DEFAULT_MS,
@@ -1056,4 +1057,6 @@ export const ALL_SHORTCUTS: Record<string, Record<string, ShortcutDefinition>> =
   ring: RING_SHORTCUTS,
   divide: DIVIDE_SHORTCUTS,
   content: CONTENT_SHORTCUTS,
+  horizon: HORIZON_SHORTCUTS,
+  recipes: RECIPE_SHORTCUTS,
 };

@@ -10,8 +10,8 @@ export const AEROCRAFT_LAYER_INTERACTIVE = 'interactive';
 
 export const AEROCRAFT_BASE_GROUPS = ['display', 'flex', 'spacing', 'gap', 'size'] as const;
 export const AEROCRAFT_FONT_GROUPS = ['text'] as const;
-export const AEROCRAFT_LAYOUT_GROUPS = ['flex', 'grid', 'position', 'display', 'gap'] as const;
-export const AEROCRAFT_MOTION_GROUPS = ['transition', 'cursor', 'interactive'] as const;
+export const AEROCRAFT_LAYOUT_GROUPS = ['flex', 'grid', 'position', 'display', 'gap', 'recipes'] as const;
+export const AEROCRAFT_MOTION_GROUPS = ['transition', 'cursor', 'interactive', 'horizon'] as const;
 
 export const ROOT_SELECTOR_PREFIX = '.';
 export const SELECTOR_DESCENDANT_SEPARATOR = ' ';

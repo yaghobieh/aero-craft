@@ -20,6 +20,16 @@ Shortcut-first utility classes for CSS for [ForgeStack](https://forgedevstack.co
 | Single plugin setup | ✅ **One plugin does everything** | ✅ |
 | Bundle size | ~15KB gzipped | ~25KB gzipped |
 
+## What's new in 1.2.0
+
+Two groups Tailwind core does not ship as utilities. Both are on by default.
+
+**Horizon** is modern CSS in one class: scroll timelines, field sizing, text-box trim, safe-area padding, masonry, anchor positioning, scroll markers, margin trim, discrete transitions, and animation composition.
+
+**Recipes** is a finished layout in one class: `stack`, `cluster`, `sidebar`, `switcher`, `cover`, `frame`, `reel`, `center`, `grid-fit`, `pancake`, `imposter`, `repel`, `dock`, `frame-square`, `frame-story`, `icon`, and `with-footer`.
+
+Turn a group off with `groups: { horizon: false }`. Each class has a reference page in the portal.
+
 ## Features
 
 - **180+ shortcuts** — layout, flex, grid, spacing, typography, motion, filters, and more.
